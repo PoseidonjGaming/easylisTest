@@ -10,8 +10,10 @@
         <table class="table table-striped table-hover table-bordered">
             <thead class="table-dark">
                 <tr>
-                    <th style="text-align: center; vertical-align: middle;">Prénom</th>
-                    <th style="text-align: center; vertical-align: middle;">Nom</th>
+                    <th style="text-align: center; vertical-align: middle;">Prénom adversaire 1</th>
+                    <th style="text-align: center; vertical-align: middle;">Nom adversaire 1</th>
+                    <th style="text-align: center; vertical-align: middle;">Prénom adversaire 2</th>
+                    <th style="text-align: center; vertical-align: middle;">Nom adversaire 2</th>
                     <th style="text-align: center; vertical-align: middle;">
                         <button type="button" class="btn btn-success"  name="ajout" id="ajout" data-bs-toggle="modal" data-bs-target="#modal_modifier"
                             onclick="modifier()"> 
@@ -24,10 +26,12 @@
                 </tr>
             </thead>
             <tbody>
-                <% users.forEach(function(user) { %>
+                <% parties.forEach(function(partie) { %>
                     <tr>
-                        <td style="text-align: center; vertical-align: middle;"><%= user.prenom %></td>
-                        <td style="text-align: center; vertical-align: middle;"><%= user.nom %></td>
+                        <td style="text-align: center; vertical-align: middle;"><%= partie.prenom1 %></td>
+                        <td style="text-align: center; vertical-align: middle;"><%= partie.nom1 %></td>
+                        <td style="text-align: center; vertical-align: middle;"><%= partie.prenom2 %></td>
+                        <td style="text-align: center; vertical-align: middle;"><%= partie.nom2 %></td>
                         <td style="text-align: center; vertical-align: middle;"> 
                             <button type="button" class="btn btn-warning"  name="{{uneSerie.id}}" id="{{uneSerie.id}}" data-bs-toggle="modal" data-bs-target="#modal_modifier" onclick=""> 
                                 Modifier

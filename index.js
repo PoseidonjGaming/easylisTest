@@ -13,6 +13,8 @@ var pool=new Pool({
     port:5432
 });
 app.set('view engine', 'ejs');
+
+
 app.get('/',(req,res)=>{
    
     pool.query(requeteBundle.select("concurrant",null),(err,result)=>{
@@ -25,6 +27,31 @@ app.get('/',(req,res)=>{
     })
     
 });
+
+app.get("/parties",(req,res)=>{
+   
+   
+    //console.log(requeteBundle.inner(requeteBundle.select('partie',null),['partie','adversaire1'],['concurrant','id']))
+    requete=requeteBundle.inner(requeteBundle.select('partie',["adversaire1",'c1.prenom AS Prenom1','c1.nom AS NOM1','adversaire2','c2.prenom AS Prenom2','c2.nom AS Nom2']),[[['partie','adversaire1'],['concurrant','c1','id']],[["partie",'adversaire2'],["concurrant",'c2','id']]])
+    pool.query(requete,(err,result)=>{
+        if (err) {
+            throw err
+        }
+       
+        res.render('parties.ejs',{
+            parties: result.rows
+        })
+        //res.status(200).json(result.rows)
+    })
+    
+    
+    
+    
+})
+
+function test1(){
+
+}
 
 app.listen(80);
 
