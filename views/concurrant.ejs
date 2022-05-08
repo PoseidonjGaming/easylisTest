@@ -29,10 +29,10 @@
                         <td style="text-align: center; vertical-align: middle;"><%= partie.prenom2 %> <%= partie.nom2 %></td>
                         
                         <td style="text-align: center; vertical-align: middle;"> 
-                            <button type="button" class="btn btn-warning" id="<%= partie.id %>"  name="<%= partie.id %>"  data-bs-toggle="modal" data-bs-target="#modal_modifier" onclick="modifier('<%= partie.id %>','i1_<%= partie.adversaire1 %>','i2_<%= partie.adversaire2 %>')"> 
+                            <button type="button" class="btn btn-warning" id="<%= partie.id %>"  name="<%= partie.id %>"  data-bs-toggle="modal" data-bs-target="#modal_modifier" onclick="modifier('<%= partie.id %>')"> 
                                 Modifier
                             </button>
-                            <button type="button" class="btn btn-danger"  name="supSerie" id="supSerie" data-bs-toggle="modal" data-bs-target="#modal_supprimer" onclick="supprimer('<%= partie.id %>')">Supprimer</button>
+                            <button type="button" class="btn btn-danger"  name="supSerie" id="supSerie" data-bs-toggle="modal" data-bs-target="#modal_supprimer" onclick="">Supprimer</button>
                         </td>
                        
                     </tr> 
@@ -40,7 +40,7 @@
             </tbody>
         </table>
        
-        <form  method="post" id="formSup" action="/supprimer">
+        <form  method="post" id="formSup">
             <div class="modal fade" id="modal_supprimer" tabindex="-1" data-bs-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
                 <div class="modal-dialog" >
                     <div class="modal-content">
@@ -75,18 +75,18 @@
                                         <p>
                                             Adversaire 1
                                             <select name="concurrant1" id="concurrant1" class="form-select">
-                                                <option id="i1_base" value="">--Please choose an option--</option>
+                                                <option value="">--Please choose an option--</option>
                                                 <% concurrants.forEach(function(concurrant) { %>
-                                                <option id="i1_<%= concurrant.id %>" value="c1_<%= concurrant.id %>" ><%= concurrant.nom %></option>
+                                                <option value=<%= concurrant.id %> ><%= concurrant.nom %></option>
                                                 <% }); %>
                                             </select>        
                                         </p>
                                         <p>
                                             Adversaire 2
                                             <select name="concurrant2" id="concurrant2" class="form-select">
-                                                <option id="i2_base" value="">--Please choose an option--</option>
+                                                <option value="">--Please choose an option--</option>
                                                 <% concurrants.forEach(function(concurrant) { %>
-                                                <option id="i2_<%= concurrant.id %>" value="c2_<%= concurrant.id %>"><%= concurrant.nom %></option>
+                                                <option value="<%= concurrant.id %>"><%= concurrant.nom %></option>
                                                 <% }); %>
                                             </select>     
                                         </p>
@@ -104,43 +104,10 @@
             </div>
         </form>
         <script>
-            function modifier(id,index1,index2){
-                
-                console.log(document.getElementById("concurrant1"))
-                concurrant1=document.getElementById('concurrant1')
-                concurrant2=document.getElementById('concurrant2')
-                if(id!=null){
-                    select(concurrant1,index1)
-                    select(concurrant2,index2)
-                    document.getElementById('exampleModalLongTitle').innerHTML="Modification de la partie" ;
+            function modifier(id){
+                if(id=null){
                     
-                    document.getElementById('form').action="/modif_partie/"+id
                 }
-                else{
-                    select(concurrant1,"i1_base")
-                    select(concurrant2,"i2_base")
-                    document.getElementById('exampleModalLongTitle').innerHTML="Ajout d'une' partie" ;
-                    document.getElementById('form').action="/add_partie"
-                }
-            }
-
-            function select(list,index){
-                if(list!=null){
-                    Array.from(list.options).forEach(function(e){
-                        if(e.getAttribute('id')==index ){
-                            
-                                e.selected=true
-                        }
-                        else if(e.selected){
-                            e.selected=false
-                        }
-                    })
-            
-                }
-            }
-
-            function supprimer(id){
-                document.getElementById('formSup').action="/suppr_partie/"+id
             }
         </script>    
     </body>

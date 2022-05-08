@@ -26,14 +26,14 @@ function select(table,champs){
 
 function where(req,selection){
     req=req+" WHERE"
-    
+    console.log(selection)
     for(i=0; i<selection.length; i++){
         
         if(i!=0){
-            req=req+" "+selection[i][0]+" "+selection[i][1]
+            req=req+" "+selection[i][0]+selection[i][1]+" = "+selection[i][2]
         }
         else{
-            req=req+" "+selection[i][1]
+            req=req+" "+selection[i][1]+" = "+selection[i][2]
         }
     }
     return req
@@ -52,16 +52,48 @@ function inner(req,inner){
         PRKey=inner[i][1][2]
         FRKey=inner[i][0][1]
         req=req+' INNER JOIN '+target+" AS "+alias+" ON "+alias+"."+PRKey+" = "+start+"."+FRKey
-        console.log(req)
+        
     }
 
     return req
 }
 
+function insert(table,element, nbRows){
+    req="INSERT INTO "+table+" VALUES ("+nbRows
+    for (i = 0; i < element.length; i++) {
+       req=req+","+element[i]
+        
+    }
+    return req+");"
+}
+
+function deleteFrom(table,row){
+    req="DELETE FROM "+table
+    return where(req,[["","id",row]])
+}
+
+function update(table,modif,id){
+    req="UPDATE "+table+" SET "
+    for (i = 0; i < modif.length; i++) {
+        
+        if(i!=modif.length-1){
+            req=req+modif[i][0]+"="+modif[i][1]+", "
+        }
+        else{
+            req=req+modif[i][0]+"="+modif[i][1]+" "
+        }
+        
+        
+    }
+    return where(req,[["",'id',id]])
+}
 
 module.exports = {
    select,
    where,
    order,
-   inner
+   inner,
+   insert,
+   update,
+   deleteFrom  
   }
