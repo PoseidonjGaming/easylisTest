@@ -5,7 +5,6 @@
 </style>
 
   <body>
-
     <div class="example-wrapper">
         <table class="table table-striped table-hover table-bordered">
             <thead class="table-dark">
@@ -22,17 +21,17 @@
                   
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="parties">
                 <% parties.forEach(function(partie) { %>
                     <tr>
                         <td style="text-align: center; vertical-align: middle;"><%= partie.prenom1 %> <%= partie.nom1 %></td>
                         <td style="text-align: center; vertical-align: middle;"><%= partie.prenom2 %> <%= partie.nom2 %></td>
                         
                         <td style="text-align: center; vertical-align: middle;"> 
-                            <button type="button" class="btn btn-warning" id="<%= partie.id %>"  name="<%= partie.id %>"  data-bs-toggle="modal" data-bs-target="#modal_modifier" onclick="modifier('<%= partie.id %>','i1_<%= partie.adversaire1 %>','i2_<%= partie.adversaire2 %>')"> 
+                            <button type="button" class="btn btn-warning" id="modifParties"  name="modifParties"  data-bs-toggle="modal" data-bs-target="#modal_modifier" onclick="modifier('<%= partie.id %>','i1_<%= partie.adversaire1 %>','i2_<%= partie.adversaire2 %>')"> 
                                 Modifier
                             </button>
-                            <button type="button" class="btn btn-danger"  name="supSerie" id="supSerie" data-bs-toggle="modal" data-bs-target="#modal_supprimer" onclick="supprimer('<%= partie.id %>')">Supprimer</button>
+                            <button type="button" class="btn btn-danger"  name="supPartie" id="supPartie" data-bs-toggle="modal" data-bs-target="#modal_supprimer" onclick="supprimer('<%= partie.id %>')">Supprimer</button>
                         </td>
                        
                     </tr> 
@@ -40,7 +39,7 @@
             </tbody>
         </table>
        
-        <form  method="post" id="formSup" action="/supprimer">
+        <form  method="post" id="formSup">
             <div class="modal fade" id="modal_supprimer" tabindex="-1" data-bs-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
                 <div class="modal-dialog" >
                     <div class="modal-content">
@@ -55,13 +54,13 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modalNon">Non</button>  
-                            <input type="submit" class="btn btn-danger delete"  id="submitAutre" value="Oui">
+                            <button type="button" class="btn btn-danger delete"  id="submitAutre">Oui</button>
                         </div>      
                     </div>
                 </div>
             </div>
         </form>
-        <form method="post" id="form" action="/add_partie">
+        <form method="post" id="form">
             <div class="modal fade" id="modal_modifier" tabindex="-1" data-bs-keyboard="true" 
                 aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >  
                     <div class="modal-dialog" role="document">
@@ -86,7 +85,7 @@
                                             <select name="concurrant2" id="concurrant2" class="form-select">
                                                 <option id="i2_base" value="">--Please choose an option--</option>
                                                 <% concurrants.forEach(function(concurrant) { %>
-                                                <option id="i2_<%= concurrant.id %>" value="c2_<%= concurrant.id %>"><%= concurrant.nom %></option>
+                                                <option id="i2_<%= concurrant.id %>" value="c2_<%= concurrant.id %>"> <%= concurrant.prenomnom %> <%= concurrant.nom %></option>
                                                 <% }); %>
                                             </select>     
                                         </p>
@@ -94,7 +93,7 @@
                                 </div>                
                             </div>
                             <div class="modal-footer">
-                                <input type="submit" class="btn btn-primary"  id="submit" value="Valider">
+                                <button type="button" class="btn btn-primary"  id="submit" onclick="addPartie()">Valider</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modalNon" >Non</button>
                             </div>
                     
@@ -103,45 +102,121 @@
                 </div>
             </div>
         </form>
-        <script>
-            function modifier(id,index1,index2){
-                
-                console.log(document.getElementById("concurrant1"))
-                concurrant1=document.getElementById('concurrant1')
-                concurrant2=document.getElementById('concurrant2')
-                if(id!=null){
-                    select(concurrant1,index1)
-                    select(concurrant2,index2)
-                    document.getElementById('exampleModalLongTitle').innerHTML="Modification de la partie" ;
-                    
-                    document.getElementById('form').action="/modif_partie/"+id
-                }
-                else{
-                    select(concurrant1,"i1_base")
-                    select(concurrant2,"i2_base")
-                    document.getElementById('exampleModalLongTitle').innerHTML="Ajout d'une' partie" ;
-                    document.getElementById('form').action="/add_partie"
-                }
-            }
-
-            function select(list,index){
-                if(list!=null){
-                    Array.from(list.options).forEach(function(e){
-                        if(e.getAttribute('id')==index ){
-                            
-                                e.selected=true
-                        }
-                        else if(e.selected){
-                            e.selected=false
-                        }
-                    })
-            
-                }
-            }
-
-            function supprimer(id){
-                document.getElementById('formSup').action="/suppr_partie/"+id
-            }
-        </script>    
+        
+        
     </body>
+    <script src="../javascript/helpers.js" ></script>
+    <script>
+        function modifier(id,index1,index2){
+            
+            
+            concurrant1=document.getElementById('concurrant1')
+            concurrant2=document.getElementById('concurrant2')
+            if(id!=null){
+                select(concurrant1,index1)
+                select(concurrant2,index2)
+                document.getElementById('exampleModalLongTitle').innerHTML="Modification de la partie" ;
+                document.getElementById('submit').setAttribute("onclick",'modifPartie("'+id+'")')
+            }
+            else{
+                select(concurrant1,"i1_base")
+                select(concurrant2,"i2_base")
+                document.getElementById('exampleModalLongTitle').innerHTML="Ajout d'une partie" ;
+                document.getElementById('submit').setAttribute("onclick",'addPartie()')
+               
+                
+            }
+            console.log(document.getElementById('submit'))
+        }
+
+        function select(list,index){
+            if(list!=null){
+                Array.from(list.options).forEach(function(e){
+                    if(e.getAttribute('id')==index ){
+                        
+                            e.selected=true
+                    }
+                    else if(e.selected){
+                        e.selected=false
+                    }
+                })
+        
+            }
+        }
+
+        function supprimer(id){
+            document.getElementById('submitAutre').setAttribute('onclick',"supprPartie('"+id+"')")
+        }
+
+        function reload(){
+            
+            request=new XMLHttpRequest()
+            request.onreadystatechange=function(){
+                if(request.readyState===XMLHttpRequest.DONE){
+                    if(request.status===200){
+                        
+                        populate("parties",JSON.parse(request.responseText))
+                    }
+                    
+                }
+                
+            }
+            request.open('GET','/api/parties',true)
+            request.send()
+
+        }
+        function addPartie(){
+            
+            request=new XMLHttpRequest()
+            request.onreadystatechange=function(){
+                
+                if(request.readyState===XMLHttpRequest.DONE){
+                    if(request.status===200){
+                        
+                        reload()
+                    }
+                    
+                }
+                
+            }
+            request.open('POST','/api/add_partie',true)
+            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            request.send(encode([["concurrant1",document.getElementById('concurrant1').selectedOptions[0].getAttribute('id')],
+            ["concurrant2",document.getElementById('concurrant2').selectedOptions[0].getAttribute('id')]]))
+
+        }
+
+        function modifPartie(id){
+            request=new XMLHttpRequest()
+            request.onreadystatechange=function(){
+                if(request.readyState===XMLHttpRequest.DONE){
+                    if(request.status===200){
+                        
+                        reload()
+                    }
+                    
+                }
+            }
+            request.open('POST','/api/modif_partie',true)
+            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            request.send(encode([["concurrant1",document.getElementById('concurrant1').selectedOptions[0].getAttribute('id')],
+            ["concurrant2",document.getElementById('concurrant2').selectedOptions[0].getAttribute('id')],['id',id]]))
+        }
+
+        function supprPartie(id){
+            request=new XMLHttpRequest()
+            request.onreadystatechange=function(){
+                if(request.readyState===XMLHttpRequest.DONE){
+                    if(request.status===200){
+                        
+                        reload()
+                    }
+                    
+                }
+            }
+            request.open('POST','/api/suppr_partie',true)
+            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            request.send(encode([['id',id]]))
+        }
+    </script>    
 </html>

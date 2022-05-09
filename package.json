@@ -2,9 +2,9 @@
   "name": "easylistest",
   "version": "1.0.0",
   "description": "Test de Easylis",
-  "main": "index.js",
+  "main": "javascript/index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon javascript/index.js"
   },
   "repository": {
     "type": "git",

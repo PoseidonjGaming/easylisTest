@@ -26,7 +26,7 @@ function select(table,champs){
 
 function where(req,selection){
     req=req+" WHERE"
-    console.log(selection)
+    
     for(i=0; i<selection.length; i++){
         
         if(i!=0){
@@ -96,4 +96,4 @@ module.exports = {
    insert,
    update,
    deleteFrom  
-  }
+}
