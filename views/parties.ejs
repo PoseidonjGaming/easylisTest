@@ -159,28 +159,12 @@
             document.getElementById('submitAutre').setAttribute('onclick',"supprPartie('"+id+"')")
         }
 
-        function reload(){
-            
-            request=new XMLHttpRequest()
-            request.onreadystatechange=function(){
-                if(request.readyState===XMLHttpRequest.DONE){
-                    if(request.status===200){
-                        
-                        
-                    }
-                    
-                }
-                
-            }
-            request.open('GET','/api/parties',true)
-            request.send()
-
-        }
+        
         function addPartie(){
             
             data=encode([["concurrant1",document.getElementById('concurrant1').selectedOptions[0].getAttribute('id')],
             ["concurrant2",document.getElementById('concurrant2').selectedOptions[0].getAttribute('id')]])
-            console.log(data)
+            
             
             socket.emit('addPartieClient',data)
            
@@ -188,36 +172,13 @@
         }
 
         function modifPartie(id){
-            request=new XMLHttpRequest()
-            request.onreadystatechange=function(){
-                if(request.readyState===XMLHttpRequest.DONE){
-                    if(request.status===200){
-                        
-                        reload()
-                    }
-                    
-                }
-            }
-            request.open('POST','/api/modif_partie',true)
-            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            request.send(encode([["concurrant1",document.getElementById('concurrant1').selectedOptions[0].getAttribute('id')],
+                       
+            socket.emit('modifPartieClient',encode([["concurrant1",document.getElementById('concurrant1').selectedOptions[0].getAttribute('id')],
             ["concurrant2",document.getElementById('concurrant2').selectedOptions[0].getAttribute('id')],['id',id]]))
         }
 
         function supprPartie(id){
-            request=new XMLHttpRequest()
-            request.onreadystatechange=function(){
-                if(request.readyState===XMLHttpRequest.DONE){
-                    if(request.status===200){
-                        
-                        reload()
-                    }
-                    
-                }
-            }
-            request.open('POST','/api/suppr_partie',true)
-            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            request.send(encode([['id',id]]))
+            socket.emit('suppPartieClient',encode([['id',id]]))
         }
     </script>    
 </html>

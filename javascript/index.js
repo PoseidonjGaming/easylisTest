@@ -91,48 +91,11 @@ app.post('/terminer/:id',(req,res)=>{
     console.log(req.body)
 })
 
-app.get('/api/parties',(req,res)=>{  
-   pool.query(Partie.getPartie(),(err,result)=>{
-       res.send(result.rows)
-   })
-})
 
-app.post("/api/add_partie",(req,res)=>{
-    
-    concurrant1=req.body.concurrant1
-    concurrant2=req.body.concurrant2
-    
-    /*pool.query(Partie.getPartie(),(err,result)=>{
-        if(err){
-            throw err
-        }
-       
-        pool.query(Partie.insertPartie(concurrant1.slice(3,concurrant1.lenght),concurrant2.slice(3,concurrant1.lenght),result.rowCount),(err,result)=>{
-            if(err){
-                throw err
-            }
-            
-            res.end()
-           
-        })
-    })*/
-    //io.emit('addPartie','test partie')
-    
-})
 
-app.post("/api/modif_partie",(req,res)=>{
-   
-    concurrant1=req.body.concurrant1
-    concurrant2=req.body.concurrant2
-    id=req.body.id    
-    pool.query(Partie.updatePartie(id,concurrant1,concurrant2),(err,result)=>{
-        if(err){
-            throw err
-        }
-        res.end()
-    })
-    
-})
+
+
+
 
 app.post("/api/suppr_partie",(req,res)=>{
     console.log(Partie.deleteFrom(req.body.id))
@@ -147,7 +110,7 @@ app.get('/test',(req,res)=>{
 
 io.on('connection',(socket)=>{
     
-    //io.emit('news','test news')
+    
     socket.on('addPartieClient',(data)=>{
         JsonData=JSON.parse(data)
         concurrant1=JsonData.concurrant1
@@ -156,10 +119,56 @@ io.on('connection',(socket)=>{
         pool.query(Partie.getPartie(),(err,result)=>{
             if(err){
                 throw err
-            }
-            console.log(JSON.stringify(result.rows))
-           
+            }           
             pool.query(Partie.insertPartie(concurrant1.slice(3,concurrant1.lenght),concurrant2.slice(3,concurrant2.lenght),result.rowCount),(err,result)=>{
+                if(err){
+                    throw err
+                }
+                
+                pool.query(Partie.getPartie(),(err,result)=>{
+                    io.emit("reload",result.rows);
+                })
+                
+            })
+        })
+        
+    })
+    socket.on('modifPartieClient',(data)=>{
+        JsonData=JSON.parse(data)
+        concurrant1=JsonData.concurrant1
+        concurrant2=JsonData.concurrant2
+        id=JsonData.id
+        
+        pool.query(Partie.getPartie(),(err,result)=>{
+            if(err){
+                throw err
+            }
+           
+           
+            pool.query(Partie.updatePartie(id,concurrant1,concurrant2),(err,result)=>{
+                if(err){
+                    throw err
+                }
+                
+                pool.query(Partie.getPartie(),(err,result)=>{
+                    io.emit("reload",result.rows);
+                })
+                
+            })
+        })
+        
+    })
+    socket.on('suppPartieClient',(data)=>{
+        JsonData=JSON.parse(data)
+        id=JsonData.id
+        
+        pool.query(Partie.getPartie(),(err,result)=>{
+            if(err){
+                throw err
+            }
+           
+           
+            pool.query(Partie.deleteFrom(id),(err,result)=>{
                 if(err){
                     throw err
                 }
