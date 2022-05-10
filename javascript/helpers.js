@@ -1,3 +1,4 @@
+
 function populate(tableau,json){
     body=document.getElementById(tableau)
     deleteRow(body)
@@ -34,16 +35,16 @@ function deleteRow(tableau){
 
 
 function encode(data){
-    component=""
+    json="{"
     for (let i = 0; i < data.length; i++) {
-        if(i==data.length){
-            component=component+data[i][0]+"="+data[i][1]
+        if(i==data.length-1){
+            json=json+'"'+data[i][0]+'":"'+data[i][1]+'"'
         }
         else{
-            component=component+data[i][0]+"="+data[i][1]+"&"
+            json=json+'"'+data[i][0]+'":"'+data[i][1]+'",'
         }
     }
-    return component
+    return json+"}"
 }
 
 function createButton(values,attributes){

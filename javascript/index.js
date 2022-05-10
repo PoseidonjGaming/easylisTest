@@ -2,11 +2,17 @@ var express=require("express");
 var app=express();
 var body=require('body-parser');
 const Partie=require("./partieRepository")
-const Concurrant=require("./concurrantRepository")
+const Concurrant=require("./concurrantRepository");
+
+const server=require('http').Server(app)
+const io=require('socket.io')(server)
+
+
 
 
 
 app.use(body.urlencoded({extended:true}))
+
 
 const Pool=require('pg').Pool;
 var pool=new Pool({
@@ -21,7 +27,23 @@ app.set('view engine', 'ejs');
 app.get('/javascript/helpers.js', function(req, res) {
     res.set('Content-Type', 'text/javascript');
     res.sendFile(__dirname + '/helpers.js');
-  });
+});
+app.get('/CSS/style.css', function(req, res) {
+    res.set('Content-Type', 'text/css');
+    res.sendFile('E:/Projet perso/easylisTest/CSS/style.css');
+});
+
+app.get('/socket.io/socket.io.js',(req,res)=>{
+    res.set('Content-Type', 'text/javascript');
+    res.sendFile("E:/Projet perso/easylisTest/node_modules/socket.io/client-dist/socket.io.js")
+})
+
+
+
+
+
+
+
 app.get("/",(req,res)=>{
     res.redirect("/parties")
 })
@@ -61,14 +83,12 @@ app.get("/parties",(req,res)=>{
     
 })
 
-app.post('/suppr_partie/:id',(req,res)=>{
-  
-    pool.query(requeteBundle.deleteFrom("partie",req.params.id),(err,result)=>{
-        if(err){
-            throw err
-        }
-        res.redirect("/parties")
-    })
+app.get("/test/bool",(req,res)=>{
+    res.send(true)
+})
+
+app.post('/terminer/:id',(req,res)=>{
+    console.log(req.body)
 })
 
 app.get('/api/parties',(req,res)=>{  
@@ -82,7 +102,7 @@ app.post("/api/add_partie",(req,res)=>{
     concurrant1=req.body.concurrant1
     concurrant2=req.body.concurrant2
     
-    pool.query(Partie.getPartie(),(err,result)=>{
+    /*pool.query(Partie.getPartie(),(err,result)=>{
         if(err){
             throw err
         }
@@ -95,7 +115,8 @@ app.post("/api/add_partie",(req,res)=>{
             res.end()
            
         })
-    })
+    })*/
+    //io.emit('addPartie','test partie')
     
 })
 
@@ -120,5 +141,39 @@ app.post("/api/suppr_partie",(req,res)=>{
     })
 })
 
-app.listen(80);
+app.get('/test',(req,res)=>{
+    res.render('test.ejs')
+})
+
+io.on('connection',(socket)=>{
+    
+    //io.emit('news','test news')
+    socket.on('addPartieClient',(data)=>{
+        JsonData=JSON.parse(data)
+        concurrant1=JsonData.concurrant1
+        concurrant2=JsonData.concurrant2
+        console.log(concurrant1)
+        pool.query(Partie.getPartie(),(err,result)=>{
+            if(err){
+                throw err
+            }
+            console.log(JSON.stringify(result.rows))
+           
+            pool.query(Partie.insertPartie(concurrant1.slice(3,concurrant1.lenght),concurrant2.slice(3,concurrant2.lenght),result.rowCount),(err,result)=>{
+                if(err){
+                    throw err
+                }
+                
+                pool.query(Partie.getPartie(),(err,result)=>{
+                    io.emit("reload",result.rows);
+                })
+                
+            })
+        })
+        
+    })
+})
+
+
+server.listen(80);
 
