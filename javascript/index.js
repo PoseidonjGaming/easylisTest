@@ -87,22 +87,8 @@ app.get("/test/bool",(req,res)=>{
     res.send(true)
 })
 
-app.post('/terminer/:id',(req,res)=>{
-    console.log(req.body)
-})
 
 
-
-
-
-
-
-app.post("/api/suppr_partie",(req,res)=>{
-    console.log(Partie.deleteFrom(req.body.id))
-    pool.query(Partie.deleteFrom(req.body.id),(err,result)=>{
-        res.end()
-    })
-})
 
 app.get('/test',(req,res)=>{
     res.render('test.ejs')
@@ -115,7 +101,7 @@ io.on('connection',(socket)=>{
         JsonData=JSON.parse(data)
         concurrant1=JsonData.concurrant1
         concurrant2=JsonData.concurrant2
-        console.log(concurrant1)
+        
         pool.query(Partie.getPartie(),(err,result)=>{
             if(err){
                 throw err
@@ -169,6 +155,31 @@ io.on('connection',(socket)=>{
            
            
             pool.query(Partie.deleteFrom(id),(err,result)=>{
+                if(err){
+                    throw err
+                }
+                
+                pool.query(Partie.getPartie(),(err,result)=>{
+                    io.emit("reload",result.rows);
+                })
+                
+            })
+        })
+        
+    })
+    socket.on('terminerPartieClient',(data)=>{
+        JsonData=JSON.parse(data)
+        id=JsonData.id
+        etat=JsonData.etat
+        console.log(JsonData)
+        console.log(id)
+        pool.query(Partie.getPartie(),(err,result)=>{
+            if(err){
+                throw err
+            }
+           
+            
+            pool.query(Partie.terminerPartie(id,etat),(err,result)=>{
                 if(err){
                     throw err
                 }

@@ -13,10 +13,20 @@ function populate(tableau,json){
         concurrant2=document.createElement('td')
         concurrant2.innerHTML=e.prenom2+" "+e.nom2
         row.appendChild(concurrant2)
+        terminer=document.createElement('td')
+        if(e.terminer){
+            terminer.innerHTML="Partie terminée "
+        }
+        else{
+            terminer.innerHTML="Partie à organiser "
+        }
+        termineButton=createButton(["t_"+e.id],["btn btn-secondary","terminer","#modal_supprimer","Terminer","supprimer"])
+        terminer.appendChild(termineButton)
+        row.appendChild(terminer)
         colButton=document.createElement('td')
         colButton.setAttribute('style','text-align: center; vertical-align: middle;')
-        colButton.appendChild(createButton([e.id,"i1_"+e.adversaire1,"i2_"+e.adversaire2],["btn btn-warning","modifPartie","#modal_modifier","Modifier"]))
-        colButton.appendChild(createButton([e.id],["btn btn-danger","supPartie","#modal_supprimer","Supprimer"]))
+        colButton.appendChild(createButton([e.id,"i1_"+e.adversaire1,"i2_"+e.adversaire2],["btn btn-warning","modifPartie","#modal_modifier","Modifier","modifier"]))
+        colButton.appendChild(createButton([e.id],["btn btn-danger","supPartie","#modal_supprimer","Supprimer","modifier"]))
         row.appendChild(colButton)
         body.appendChild(row)
         
@@ -64,7 +74,7 @@ function createButton(values,attributes){
         }
     }
     
-    button.setAttribute('onclick','modifier('+onclickValue+")")
+    button.setAttribute('onclick',attributes[4]+'('+onclickValue+")")
     button.innerHTML=attributes[3]
     
     return button
