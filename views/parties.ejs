@@ -1,11 +1,19 @@
 <%- include('base'); %>
-  <style>
-    .example-wrapper { font: 18px/1.5 sans-serif; background-color: #F5F5F5;}
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+
 
   <body>
-    <div class="example-wrapper">
+    <div id="mySidebar" class="sidebar">
+        <div>
+            <button type="button" class="btn-close close" onclick="closeNav()"></button>
+            <button type="button" class="btn btn-success reload" onclick="ReqReload()">
+                Rafraîchir
+            </button>
+        </div>
+        <div id="notif">
+            
+        </div>
+      </div>
+    <div id="main">
         <table class="table table-striped table-hover table-bordered">
             <thead class="table-dark">
                 <tr>
@@ -17,14 +25,15 @@
                         <button type="button" class="btn btn-success"  name="ajout" id="ajout" data-bs-toggle="modal" data-bs-target="#modal_modifier"
                             onclick="modifier()"> 
                              Ajouter une partie
-                        </button>                       
+                        </button>
+                        <button id="side" class="btn btn-primary" onclick="openNav()">Open Sidebar</button>       
                     </th>
                   
                 </tr>
             </thead>
             <tbody id="parties">
                 <% parties.forEach(function(partie) { %>
-                    <tr>
+                   <tr>
                         <td style="text-align: center; vertical-align: middle;"><%= partie.prenom1 %> <%= partie.nom1 %></td>
                         <td style="text-align: center; vertical-align: middle;"><%= partie.prenom2 %> <%= partie.nom2 %></td>
                         <td style="text-align: center; vertical-align: middle;"><% if(partie.terminer) { %>Partie terminée<% }else{%>Partie à organiser<%}%> 
@@ -107,8 +116,9 @@
                     </div>
                 </div>
             </div>
-        </form>
-        
+        </form> 
+    </div>
+    
         
     </body>
     <script src="../javascript/helpers.js" ></script>
@@ -116,17 +126,22 @@
     <script>
 
         var socket=io()
-
+        var Nbnotif=0
+        
+        
         socket.on('addPartie',function(msg){
             console.log(msg)
         })
+       
         socket.on("reload",function(data){
-            console.log(data)
             populate("parties",data)
         })
+        socket.on("news",function(data){
+            Jsondata=JSON.parse(data)
+            info(Jsondata.titre,Jsondata.msg)
+        })
+
         function modifier(id,index1,index2){
-            
-            
             concurrant1=document.getElementById('concurrant1')
             concurrant2=document.getElementById('concurrant2')
             if(id!=null){
@@ -149,7 +164,7 @@
                
                 
             }
-            //console.log(document.getElementById('submit'))
+            
         }
 
         function select(list,index){
@@ -189,7 +204,7 @@
                 
             }
             else{
-                document.getElementById('pModalAutre').innerHTML=text
+                document.getElementById('pModalAutre').innerHTML="Voulez-vous supprimer cette partie ?"
                 document.getElementById('submitAutre').setAttribute('onclick',"supprPartie('"+id+"')")
                 document.getElementById("submitAutre").setAttribute('class','btn btn-danger')
             }
@@ -220,6 +235,15 @@
 
         function terminerPartie(id){
             socket.emit("terminerPartieClient",encode([['id',id.slice(2,id.lenght)],['etat',document.getElementById('checkboxTerminer').checked]]))
+        }
+
+        function openNav() {
+            document.getElementById("mySidebar").style.width = "300px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "0";
+            document.getElementById("main").style.marginLeft= "0";
         }
     </script>    
 </html>

@@ -10,6 +10,13 @@ function getPartie(){
     return req
 }
 
+function getPartieWhere(id){
+    return requeteBundle.where(requeteBundle.inner(requeteBundle.select("partie",['c1.prenom AS Prenom1',
+    'c1.nom AS NOM1','adversaire2','c2.prenom AS Prenom2','c2.nom AS Nom2']),
+    [[['partie','adversaire1'],['concurrant','c1','id']],[["partie",'adversaire2'],["concurrant",'c2','id']]]),
+    [["","partie.id",id]])
+}
+
 function insertPartie(concurrant1,concurrant2,maxRow){
     return requeteBundle.insert("partie",[concurrant1,concurrant2],maxRow)
 }
@@ -30,5 +37,6 @@ module.exports={
     insertPartie,
     updatePartie,
     deleteFrom,
-    terminerPartie
+    terminerPartie,
+    getPartieWhere
 }

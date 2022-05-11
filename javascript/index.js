@@ -83,9 +83,7 @@ app.get("/parties",(req,res)=>{
     
 })
 
-app.get("/test/bool",(req,res)=>{
-    res.send(true)
-})
+
 
 
 
@@ -96,7 +94,11 @@ app.get('/test',(req,res)=>{
 
 io.on('connection',(socket)=>{
     
-    
+    socket.on("reqReload",function(){
+        pool.query(Partie.getPartie(),(err,result)=>{
+            socket.emit("reload",result.rows)
+        })
+    })
     socket.on('addPartieClient',(data)=>{
         JsonData=JSON.parse(data)
         concurrant1=JsonData.concurrant1
@@ -110,11 +112,17 @@ io.on('connection',(socket)=>{
                 if(err){
                     throw err
                 }
-                
                 pool.query(Partie.getPartie(),(err,result)=>{
-                    io.emit("reload",result.rows);
+                    if(err){
+                        throw err
+                    }
+                    
+                    partie=result.rows[result.rowCount-1]
+                    msg='{"titre":"Une partie a été ajoutée", "msg":"Une partie opposant '+partie.prenom1+" "+partie.nom1+' à '+partie.prenom2+" "+partie.nom2+' a été ajoutée"}'
+                    
+                    socket.broadcast.emit("news",msg);
+                    socket.emit('reload',result.rows)
                 })
-                
             })
         })
         
@@ -137,7 +145,15 @@ io.on('connection',(socket)=>{
                 }
                 
                 pool.query(Partie.getPartie(),(err,result)=>{
-                    io.emit("reload",result.rows);
+                    if(err){
+                        throw err
+                    }
+                    
+                    partie=result.rows[result.rowCount-1]
+                    msg='{"titre":"Une partie a été modifiée", "msg":"La partie opposant '+partie.prenom1+" "+partie.nom1+' à '+partie.prenom2+" "+partie.nom2+' a été modifiée"}'
+                    
+                    socket.broadcast.emit("news",msg);
+                    socket.emit('reload',result.rows)
                 })
                 
             })
@@ -147,24 +163,33 @@ io.on('connection',(socket)=>{
     socket.on('suppPartieClient',(data)=>{
         JsonData=JSON.parse(data)
         id=JsonData.id
-        
-        pool.query(Partie.getPartie(),(err,result)=>{
+
+        pool.query(Partie.getPartieWhere(id),(err,result)=>{
             if(err){
                 throw err
             }
-           
-           
+            partie=result.rows[0]
+            console.log(partie.prenom1)
             pool.query(Partie.deleteFrom(id),(err,result)=>{
                 if(err){
                     throw err
                 }
-                
+               
                 pool.query(Partie.getPartie(),(err,result)=>{
-                    io.emit("reload",result.rows);
+                    if(err){
+                        throw err
+                    }
+                    
+                    msg='{"titre":"Une partie a été supprimée", "msg":"La partie opposant '+partie.prenom1+" "+partie.nom1+' à '+partie.prenom2+" "+partie.nom2+' a été supprimée"}'
+                    
+                    socket.broadcast.emit("news",msg);
+                    socket.emit('reload',result.rows)
                 })
                 
             })
         })
+       
+        
         
     })
     socket.on('terminerPartieClient',(data)=>{
@@ -173,20 +198,23 @@ io.on('connection',(socket)=>{
         etat=JsonData.etat
         console.log(JsonData)
         console.log(id)
-        pool.query(Partie.getPartie(),(err,result)=>{
+        pool.query(Partie.getPartieWhere(id),(err,result)=>{
             if(err){
                 throw err
             }
            
-            
+            partie=result.rows[0]
             pool.query(Partie.terminerPartie(id,etat),(err,result)=>{
                 if(err){
                     throw err
                 }
-                
                 pool.query(Partie.getPartie(),(err,result)=>{
-                    io.emit("reload",result.rows);
+                    msg='{"titre":"Une partie a été modifiée", "msg":"La partie opposant '+partie.prenom1+" "+partie.nom1+' à '+partie.prenom2+" "+partie.nom2+' a été organisée"}'
+                
+                    socket.broadcast.emit("news",msg);
+                    socket.emit('reload',result.rows)
                 })
+               
                 
             })
         })

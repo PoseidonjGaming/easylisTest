@@ -39,46 +39,108 @@
         </div>
     </div>
 </nav>
-  <style>
-    .example-wrapper { font: 18px/1.5 sans-serif; background-color: #F5F5F5;}
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+ 
 
   <body>
-    
-    <button type="button" class="btn btn-success"  name="ajout" id="ajout"
-    onclick="reload()"> 
-     Ajouter une partie <span class="badge" id="badge">1</span>
+    <div id="main">
+      <button id="side" class="btn btn-primary" onclick="openNav()">Open Sidebar</button>
+       
+    </div>
+    <div id="mySidebar" class="sidebar">
+      <div>
+          <button type="button" class="btn-close close" onclick="closeNav()"></button>
+          <button type="button" class="btn btn-success" onclick="info('qsdqsd','qsdqsdqsd')">
+              Rafraîchir
+          </button>
+      </div>
+      <div id="notif">
+        <a href="#" class="list-group-item list-group-item-action py-3 lh-tight">
+          <div class="d-flex w-100 align-items-center justify-content-between">
+            <strong class="mb-1">Une partie a été ajoutée</strong>
+          </div>
+          <div class="col-10 mb-1 small">Une partie opposant ad1 à ad2 a été ajoutée</div>
+        </a>
+        <a href="#" class="list-group-item list-group-item-action py-3 lh-tight">
+          <div class="d-flex w-100 align-items-center justify-content-between">
+            <strong class="mb-1">Une partie a été modifiée</strong>
+          </div>
+          <div class="col-10 mb-1 small">La partie opposant ad1 à ad2. Elle oppose maintenant ad2 à ad1</div>
+        </a>
+        <a href="#" class="list-group-item list-group-item-action py-3 lh-tight">
+          <div class="d-flex w-100 align-items-center justify-content-between">
+            <strong class="mb-1">Une partie a été supprimée</strong>
+            
+          </div>
+          <div class="col-10 mb-1 small">La partie opposant ad1 à ad2 a été supprimé</div>
+        </a>
+      </div>
+    </div>
+      
 </button>
 <script src="socket.io/socket.io.js"></script>
 <script>
-  var notif=0;
+  var Nbnotif=0;
   const socket=io();
 
-  socket.on('news',function(msg){
-    console.log(msg)
-  })
+  function openNav() {
+    document.getElementById("mySidebar").style.width = "300px";
+  }
 
-  function reload(){
+  function closeNav() {
+    document.getElementById("mySidebar").style.width = "0";
+    document.getElementById("main").style.marginLeft= "0";
+  }
+
+  
+
+  function info(titre,msg){
+    
+    /*Array.from(document.getElementById('notif').children).forEach(function(e){
+      e.remove()
+    })*/
+    
+    aGen=document.createElement('a')
+    aGen.setAttribute('href',"#")
+    aGen.setAttribute('class',"list-group-item list-group-item-action py-3 lh-tight")
+
+    divTitre=document.createElement('div')
+    divTitre.setAttribute('class',"d-flex w-100 align-items-center justify-content-between")
+
+    strongTitre=document.createElement('strong')
+    strongTitre.setAttribute('class',"mb-1")
+    strongTitre.innerHTML=titre
+
+    divTitre.appendChild(strongTitre)
+    aGen.appendChild(divTitre)
+
+    divMsg=document.createElement("div")
+    divMsg.setAttribute('class',"col-10 mb-1 small")
+    divMsg.innerHTML=msg
+
+    aGen.appendChild(divMsg)
+
+    document.getElementById('mySidebar').appendChild(aGen)
+    notif()
+  }
+
+  function notif(){
+    
+    button=document.getElementById("side")
+    if(Nbnotif==0){
+      bulleNotif=document.createElement('span')
+      bulleNotif.setAttribute('class','badge')
+      bulleNotif.setAttribute('id',"bulle")
+      bulleNotif.innerHTML='1'
+      button.innerHTML=button.innerHTML+" "
+      button.appendChild(bulleNotif)
+
       
-      request=new XMLHttpRequest()
-      request.onreadystatechange=function(){
-          if(request.readyState===XMLHttpRequest.DONE){
-              if(request.status===200){
-                  if(request.responseText=="true"){
-                      notif++
-                      document.getElementsByClassName('badge')[0].innerHTML="2"
-                  }
-                  
-              }
-              
-          }
-          
-      }
-      request.open('GET','/test/bool',true)
-      request.send()
-      console.log(document.getElementsByClassName('badge'))
-
+    }
+    else{
+      document.getElementById('bulle').innerHTML=Nbnotif+1
+    }
+    Nbnotif++
+    
   }
   
 </script>         
