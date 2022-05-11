@@ -6,6 +6,8 @@ const Concurrant=require("./concurrantRepository");
 
 const server=require('http').Server(app)
 const io=require('socket.io')(server)
+const socketPartie=require('./PartieSocket')
+const socketConcurrant=require('./ConcurrantSocket')
 
 
 
@@ -54,7 +56,7 @@ app.get('/concurrants',(req,res)=>{
         if (err) {
             throw err
         }
-        res.render('index.ejs',{
+        res.render('concurrant.ejs',{
             users: result.rows
         })
     })
@@ -77,7 +79,7 @@ app.get("/parties",(req,res)=>{
             
         })        
     })
-    
+   
     
     
     
@@ -94,132 +96,28 @@ app.get('/test',(req,res)=>{
 
 io.on('connection',(socket)=>{
     
-    socket.on("reqReload",function(){
+    socket.on("reqReloadPartie",function(){
         pool.query(Partie.getPartie(),(err,result)=>{
-            socket.emit("reload",result.rows)
+            socket.emit("reloadPartie",result.rows)
         })
     })
-    socket.on('addPartieClient',(data)=>{
-        JsonData=JSON.parse(data)
-        concurrant1=JsonData.concurrant1
-        concurrant2=JsonData.concurrant2
-        
-        pool.query(Partie.getPartie(),(err,result)=>{
-            if(err){
-                throw err
-            }           
-            pool.query(Partie.insertPartie(concurrant1.slice(3,concurrant1.lenght),concurrant2.slice(3,concurrant2.lenght),result.rowCount),(err,result)=>{
-                if(err){
-                    throw err
-                }
-                pool.query(Partie.getPartie(),(err,result)=>{
-                    if(err){
-                        throw err
-                    }
-                    
-                    partie=result.rows[result.rowCount-1]
-                    msg='{"titre":"Une partie a été ajoutée", "msg":"Une partie opposant '+partie.prenom1+" "+partie.nom1+' à '+partie.prenom2+" "+partie.nom2+' a été ajoutée"}'
-                    
-                    socket.broadcast.emit("news",msg);
-                    socket.emit('reload',result.rows)
-                })
-            })
+    
+    socket.on("reqReloadConcurrant",function(){
+        pool.query(Concurrant.getConcurrant(),(err,result)=>{
+            socket.emit("reloadConcurrant",result.rows)
         })
-        
     })
-    socket.on('modifPartieClient',(data)=>{
-        JsonData=JSON.parse(data)
-        concurrant1=JsonData.concurrant1
-        concurrant2=JsonData.concurrant2
-        id=JsonData.id
-        
-        pool.query(Partie.getPartie(),(err,result)=>{
-            if(err){
-                throw err
-            }
-           
-           
-            pool.query(Partie.updatePartie(id,concurrant1,concurrant2),(err,result)=>{
-                if(err){
-                    throw err
-                }
-                
-                pool.query(Partie.getPartie(),(err,result)=>{
-                    if(err){
-                        throw err
-                    }
-                    
-                    partie=result.rows[result.rowCount-1]
-                    msg='{"titre":"Une partie a été modifiée", "msg":"La partie opposant '+partie.prenom1+" "+partie.nom1+' à '+partie.prenom2+" "+partie.nom2+' a été modifiée"}'
-                    
-                    socket.broadcast.emit("news",msg);
-                    socket.emit('reload',result.rows)
-                })
-                
-            })
-        })
-        
-    })
-    socket.on('suppPartieClient',(data)=>{
-        JsonData=JSON.parse(data)
-        id=JsonData.id
+    socketPartie.addPartieClient(socket)
+    socketPartie.modifPartieClient(socket)
+    socketPartie.suppPartieClient(socket)
+    socketPartie.terminerPartieClient(socket)
 
-        pool.query(Partie.getPartieWhere(id),(err,result)=>{
-            if(err){
-                throw err
-            }
-            partie=result.rows[0]
-            console.log(partie.prenom1)
-            pool.query(Partie.deleteFrom(id),(err,result)=>{
-                if(err){
-                    throw err
-                }
-               
-                pool.query(Partie.getPartie(),(err,result)=>{
-                    if(err){
-                        throw err
-                    }
-                    
-                    msg='{"titre":"Une partie a été supprimée", "msg":"La partie opposant '+partie.prenom1+" "+partie.nom1+' à '+partie.prenom2+" "+partie.nom2+' a été supprimée"}'
-                    
-                    socket.broadcast.emit("news",msg);
-                    socket.emit('reload',result.rows)
-                })
-                
-            })
-        })
-       
-        
-        
-    })
-    socket.on('terminerPartieClient',(data)=>{
-        JsonData=JSON.parse(data)
-        id=JsonData.id
-        etat=JsonData.etat
-        console.log(JsonData)
-        console.log(id)
-        pool.query(Partie.getPartieWhere(id),(err,result)=>{
-            if(err){
-                throw err
-            }
-           
-            partie=result.rows[0]
-            pool.query(Partie.terminerPartie(id,etat),(err,result)=>{
-                if(err){
-                    throw err
-                }
-                pool.query(Partie.getPartie(),(err,result)=>{
-                    msg='{"titre":"Une partie a été modifiée", "msg":"La partie opposant '+partie.prenom1+" "+partie.nom1+' à '+partie.prenom2+" "+partie.nom2+' a été organisée"}'
-                
-                    socket.broadcast.emit("news",msg);
-                    socket.emit('reload',result.rows)
-                })
-               
-                
-            })
-        })
-        
-    })
+    socketConcurrant.addConcurrantClient(socket)
+    socketConcurrant.modifConcurrantClient(socket)
+    socketConcurrant.suppConcurrantClient(socket)
+    
+    
+    
 })
 
 

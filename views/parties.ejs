@@ -133,10 +133,10 @@
             console.log(msg)
         })
        
-        socket.on("reload",function(data){
+        socket.on("reloadPartie",function(data){
             populate("parties",data)
         })
-        socket.on("news",function(data){
+        socket.on("newsPartie",function(data){
             Jsondata=JSON.parse(data)
             info(Jsondata.titre,Jsondata.msg)
         })
@@ -245,5 +245,59 @@
             document.getElementById("mySidebar").style.width = "0";
             document.getElementById("main").style.marginLeft= "0";
         }
+        
+        function populate(tableau,json){
+            body=document.getElementById(tableau)
+            deleteRow(body)
+            Array.from(json).forEach(function(e){
+            
+                row=document.createElement('tr')
+                row.setAttribute('style',"text-align: center; vertical-align: middle;")
+                concurrant1=document.createElement('td')
+                concurrant1.innerHTML=e.prenom1+" "+e.nom1
+                console.log(concurrant1)
+                row.appendChild(concurrant1)
+                concurrant2=document.createElement('td')
+                concurrant2.innerHTML=e.prenom2+" "+e.nom2
+                row.appendChild(concurrant2)
+                terminer=document.createElement('td')
+                if(e.terminer){
+                    terminer.innerHTML="Partie terminée "
+                }
+                else{
+                    terminer.innerHTML="Partie à organiser "
+                }
+                termineButton=createButton(["t_"+e.id],["btn btn-secondary","terminer","#modal_supprimer","Terminer","supprimer"])
+                terminer.appendChild(termineButton)
+                row.appendChild(terminer)
+                colButton=document.createElement('td')
+                colButton.setAttribute('style','text-align: center; vertical-align: middle;')
+                colButton.appendChild(createButton([e.id,"i1_"+e.adversaire1,"i2_"+e.adversaire2],["btn btn-warning","modifPartie","#modal_modifier","Modifier","modifier"]))
+                colButton.innerHTML=colButton.innerHTML+" "
+                colButton.appendChild(createButton([e.id],["btn btn-danger","supPartie","#modal_supprimer","Supprimer","supprimer"]))
+                
+                row.appendChild(colButton)
+                body.appendChild(row)
+                
+            
+        })
+
+        function ReqReload(){
+            socket.emit("reqReloadPartie")
+            
+            Array.from(document.getElementById('notif').children).forEach(function(e){
+            e.remove()
+            })
+            bulle=document.getElementById('bulle')
+            if(bulle!=null){
+                bulle.remove()
+            }
+            Nbnotif=0
+        
+        }
+    
+    
+    
+}
     </script>    
 </html>

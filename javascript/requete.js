@@ -61,7 +61,13 @@ function inner(req,inner){
 function insert(table,element, nbRows){
     req="INSERT INTO "+table+" VALUES ("+nbRows
     for (i = 0; i < element.length; i++) {
-       req=req+","+element[i]
+        if(typeof element[i]==typeof 1){
+            req=req+","+element[i]
+        }
+        else if(typeof element[i]==typeof "test"){
+            req=req+",'"+element[i]+"'"
+        }
+       
         
     }
     return req+");"
@@ -75,12 +81,23 @@ function deleteFrom(table,row){
 function update(table,modif,id){
     req="UPDATE "+table+" SET "
     for (i = 0; i < modif.length; i++) {
-        
+        req=req+modif[i][0]+"="
         if(i!=modif.length-1){
-            req=req+modif[i][0]+"="+modif[i][1]+", "
+            if(typeof modif[i][1]==typeof 1){
+                req=req+modif[i][1]+", "
+            }
+            else if(typeof modif[i][1]==typeof "test"){
+                req=req+"'"+modif[i][1]+"', "
+            }
+            
         }
         else{
-            req=req+modif[i][0]+"="+modif[i][1]+" "
+            if(typeof modif[i][1]==typeof 1){
+                req=req+modif[i][1]+" "
+            }
+            else if(typeof modif[i][1]==typeof "test"){
+                req=req+"'"+modif[i][1]+"' "
+            }
         }
         
         
