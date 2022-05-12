@@ -45,5 +45,7 @@ port: Le port d'écoute du serveur de base données. (5432 est le port par défa
 
 # Utilisation
 La procédure d'utilisation est similaire pour les parties et les concurrants.
+https://github.com/PoseidonjGaming/easylisTest/blob/bbef567529b71a3c34583e3a02c1ded1f850b0a4/documentation/tableau.png
+![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/bbef567529b71a3c34583e3a02c1ded1f850b0a4/documentation/tableau.png?raw=true)
 
-[[https://github.com/PoseidonjGaming/easylisTest/blob/bbef567529b71a3c34583e3a02c1ded1f850b0a4/documentation/tableau.png|alt=octocat]]
+
