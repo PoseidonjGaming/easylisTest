@@ -42,3 +42,6 @@ host: L'adresse IP du serveur de base de données.
 database: Le nom de la base de données.
 
 port: Le port d'écoute du serveur de base données. (5432 est le port par défaut)
+
+# Utilisation
+La procédure d'utilisation est similaire pour les parties et les concurrants.
