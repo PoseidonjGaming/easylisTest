@@ -3,11 +3,13 @@
 
   <body>
     <div id="mySidebar" class="sidebar">
-        <div>
+        <div class="border-bottom">
+            
             <button type="button" class="btn-close close" onclick="closeNav()"></button>
             <button type="button" class="btn btn-success reload" onclick="ReqReload()">
                 Rafraîchir
             </button>
+            <p>Notification</p>
         </div>
         <div id="notif">
             
@@ -26,7 +28,7 @@
                             onclick="modifier()"> 
                              Ajouter une partie
                         </button>
-                        <button id="side" class="btn btn-primary" onclick="openNav()">Open Sidebar</button>       
+                        <button id="side" class="btn btn-primary" onclick="openNav()">Ouvrir les notification</button>       
                     </th>
                   
                 </tr>
@@ -89,18 +91,18 @@
                                         <p>
                                             Adversaire 1
                                             <select name="concurrant1" id="concurrant1" class="form-select">
-                                                <option id="i1_base" value="">--Please choose an option--</option>
+                                                <option id="i1_base" value="">--Choisir une option--</option>
                                                 <% concurrants.forEach(function(concurrant) { %>
-                                                <option id="i1_<%= concurrant.id %>" value="c1_<%= concurrant.id %>" ><%= concurrant.nom %></option>
+                                                <option id="i1_<%= concurrant.id %>" value="c1_<%= concurrant.id %>" ><%= concurrant.prenom %> <%= concurrant.nom %></option>
                                                 <% }); %>
                                             </select>        
                                         </p>
                                         <p>
                                             Adversaire 2
                                             <select name="concurrant2" id="concurrant2" class="form-select">
-                                                <option id="i2_base" value="">--Please choose an option--</option>
+                                                <option id="i2_base" value="">--Choisir une option--</option>
                                                 <% concurrants.forEach(function(concurrant) { %>
-                                                <option id="i2_<%= concurrant.id %>" value="c2_<%= concurrant.id %>"> <%= concurrant.prenomnom %> <%= concurrant.nom %></option>
+                                                <option id="i2_<%= concurrant.id %>" value="c2_<%= concurrant.id %>"> <%= concurrant.prenom %> <%= concurrant.nom %></option>
                                                 <% }); %>
                                             </select>     
                                         </p>
@@ -239,11 +241,12 @@
 
         function openNav() {
             document.getElementById("mySidebar").style.width = "300px";
+            document.getElementById("mySidebar").style.left = "0px";
         }
 
         function closeNav() {
-            document.getElementById("mySidebar").style.width = "0";
-            document.getElementById("main").style.marginLeft= "0";
+            document.getElementById("mySidebar").style.width = "0px";
+            document.getElementById("mySidebar").style.left= "-6px";
         }
         
         function populate(tableau,json){
@@ -281,8 +284,8 @@
                 
             
         })
-
-        function ReqReload(){
+    }
+    function ReqReload(){
             socket.emit("reqReloadPartie")
             
             Array.from(document.getElementById('notif').children).forEach(function(e){
@@ -295,9 +298,5 @@
             Nbnotif=0
         
         }
-    
-    
-    
-}
     </script>    
 </html>

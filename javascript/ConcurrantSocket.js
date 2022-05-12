@@ -83,7 +83,7 @@ function suppConcurrantClient(socket){
     socket.on('suppConcurrantClient',(data)=>{
         JsonData=JSON.parse(data)
         id=JsonData.id
-        console.log(Concurrant.getConcurrantWhere(id))
+        
         pool.query(Concurrant.getConcurrantWhere(id),(err,result)=>{
             if(err){
                 throw err

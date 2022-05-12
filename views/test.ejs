@@ -43,17 +43,20 @@
 
   <body>
     <div id="main">
-      <button id="side" class="btn btn-primary" onclick="openNav()">Open Sidebar</button>
+     
+      <button id="side" class="side" onclick="openNav()">Open Sidebar</button>
        
     </div>
     <div id="mySidebar" class="sidebar">
       <div>
           <button type="button" class="btn-close close" onclick="closeNav()"></button>
-          <button type="button" class="btn btn-success" onclick="info('qsdqsd','qsdqsdqsd')">
+          <button type="button" class="reload" onclick="info('qsdqsd','qsdqsdqsd')">
               Rafraîchir
           </button>
       </div>
+      
       <div id="notif">
+        
         <a href="#" class="list-group-item list-group-item-action py-3 lh-tight">
           <div class="d-flex w-100 align-items-center justify-content-between">
             <strong class="mb-1">Une partie a été ajoutée</strong>
@@ -84,6 +87,7 @@
 
   function openNav() {
     document.getElementById("mySidebar").style.width = "300px";
+    document.getElementById("mySidebar").style.left = "0px";
   }
 
   function closeNav() {

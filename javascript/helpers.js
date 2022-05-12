@@ -92,12 +92,5 @@ function info(titre,msg){
     
   }
 
-  function openNav() {
-    document.getElementById("mySidebar").style.width = "300px";
-}
 
-function closeNav() {
-    document.getElementById("mySidebar").style.width = "0";
-    document.getElementById("main").style.marginLeft= "0";
-}
 
