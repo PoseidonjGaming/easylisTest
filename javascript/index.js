@@ -8,16 +8,9 @@ const server=require('http').Server(app)
 const io=require('socket.io')(server)
 const socketPartie=require('./PartieSocket')
 const socketConcurrant=require('./ConcurrantSocket')
-
-
-
-
-
 app.use(body.urlencoded({extended:true}))
-
-
 const Pool=require('pg').Pool;
-var pool=new Pool({
+const pool=new Pool({
     user:'postgres',
     host:'localhost',
     database:"easylis",
@@ -122,4 +115,3 @@ io.on('connection',(socket)=>{
 
 
 server.listen(80);
-

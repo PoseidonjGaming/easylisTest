@@ -11,6 +11,7 @@
             <button type="button" class="btn btn-success reload" onclick="ReqReload()">
                 Rafraîchir
             </button>
+            <p>Notification</p>
         </div>
         <div id="notif">
             
@@ -27,7 +28,7 @@
                             onclick="modifier()"> 
                             Ajouter un concurrant
                         </button>
-                        <button id="side" class="btn btn-primary" onclick="openNav()">Open Sidebar</button>                       
+                        <button id="side" class="btn btn-primary" onclick="openNav()">Ouvrir les notification</button>                       
                     </th>  
                 </tr>
             </thead>
@@ -172,12 +173,13 @@
             }
 
             function openNav() {
-                document.getElementById("mySidebar").style.width = "300px";
+                document.getElementById("mySidebar").style.left = "0px";
+                document.getElementById('side').setAttribute('onclick','closeNav()')
             }
 
             function closeNav() {
-                document.getElementById("mySidebar").style.width = "0";
-                document.getElementById("main").style.marginLeft= "0";
+                document.getElementById("mySidebar").style.left= "-300px";
+                document.getElementById('side').setAttribute('onclick','openNav()')
             }
 
             

@@ -195,9 +195,13 @@
                 check.setAttribute('id','checkboxTerminer')
                 check.setAttribute('name','checkboxTerminer')
                 p=document.createElement('p')
-                p.appendChild(check)
-                p.innerHTML="Terminer la partie "+p.innerHTML
-                console.log(p)
+                label=document.createElement('label')
+                label.setAttribute('for','checkboxTerminer')
+                label.appendChild(check)
+                label.innerHTML="Terminer la partie "+label.innerHTML
+                p.appendChild(label)
+                
+                
                 document.getElementById('pModalAutre').appendChild(p)
                 document.getElementById("submitAutre").setAttribute('class','btn btn-primary')
                 document.getElementById("submitAutre").setAttribute('onclick',"terminerPartie('"+id+"')")
@@ -240,13 +244,14 @@
         }
 
         function openNav() {
-            document.getElementById("mySidebar").style.width = "300px";
             document.getElementById("mySidebar").style.left = "0px";
+            document.getElementById('side').setAttribute('onclick','closeNav()')
         }
 
         function closeNav() {
-            document.getElementById("mySidebar").style.width = "0px";
-            document.getElementById("mySidebar").style.left= "-6px";
+            
+            document.getElementById("mySidebar").style.left= "-300px";
+            document.getElementById('side').setAttribute('onclick','openNav()')
         }
         
         function populate(tableau,json){
