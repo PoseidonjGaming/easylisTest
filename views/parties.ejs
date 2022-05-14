@@ -38,17 +38,16 @@
                    <tr>
                         <td style="text-align: center; vertical-align: middle;"><%= partie.prenom1 %> <%= partie.nom1 %></td>
                         <td style="text-align: center; vertical-align: middle;"><%= partie.prenom2 %> <%= partie.nom2 %></td>
-                        <td style="text-align: center; vertical-align: middle;"><% if(partie.terminer) { %>Partie terminée<% }else{%>Partie à organiser<%}%> 
-                            <button type="button" class="btn btn-secondary" id="terminer"  name="terminer"  data-bs-toggle="modal" data-bs-target="#modal_supprimer" onclick="supprimer('t_'+'<%= partie.id %>')"> 
-                            Terminer
-                            </button>
-                        </td>
+                        <td style="text-align: center; vertical-align: middle;"><% if(partie.terminer) { %>Partie terminée<% }else{%>Partie à organiser<%}%></td>
                         
                         <td style="text-align: center; vertical-align: middle;"> 
                             <button type="button" class="btn btn-warning" id="modifParties"  name="modifParties"  data-bs-toggle="modal" data-bs-target="#modal_modifier" onclick="modifier('<%= partie.id %>','i1_<%= partie.adversaire1 %>','i2_<%= partie.adversaire2 %>')"> 
                                 Modifier
                             </button>
                             <button type="button" class="btn btn-danger"  name="supPartie" id="supPartie" data-bs-toggle="modal" data-bs-target="#modal_supprimer" onclick="supprimer('<%= partie.id %>')">Supprimer</button>
+                            <button type="button" class="btn btn-secondary" id="terminer"  name="terminer"  data-bs-toggle="modal" data-bs-target="#modal_supprimer" onclick="supprimer('t_'+'<%= partie.id %>')"> 
+                                Terminer
+                            </button>
                         </td>
                        
                     </tr> 
@@ -275,14 +274,17 @@
                 else{
                     terminer.innerHTML="Partie à organiser "
                 }
-                termineButton=createButton(["t_"+e.id],["btn btn-secondary","terminer","#modal_supprimer","Terminer","supprimer"])
-                terminer.appendChild(termineButton)
+                
                 row.appendChild(terminer)
+                
                 colButton=document.createElement('td')
                 colButton.setAttribute('style','text-align: center; vertical-align: middle;')
                 colButton.appendChild(createButton([e.id,"i1_"+e.adversaire1,"i2_"+e.adversaire2],["btn btn-warning","modifPartie","#modal_modifier","Modifier","modifier"]))
                 colButton.innerHTML=colButton.innerHTML+" "
                 colButton.appendChild(createButton([e.id],["btn btn-danger","supPartie","#modal_supprimer","Supprimer","supprimer"]))
+                colButton.innerHTML=colButton.innerHTML+" "
+                termineButton=createButton(["t_"+e.id],["btn btn-secondary","terminer","#modal_supprimer","Terminer","supprimer"])
+                colButton.appendChild(termineButton)
                 
                 row.appendChild(colButton)
                 body.appendChild(row)

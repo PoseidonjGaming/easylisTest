@@ -27,6 +27,10 @@ app.get('/CSS/style.css', function(req, res) {
     res.set('Content-Type', 'text/css');
     res.sendFile('E:/Projet perso/easylisTest/CSS/style.css');
 });
+app.get('/CSS/badgePartie.css', function(req, res) {
+    res.set('Content-Type', 'text/css');
+    res.sendFile('E:/Projet perso/easylisTest/CSS/badgePartie.css');
+});
 
 app.get('/socket.io/socket.io.js',(req,res)=>{
     res.set('Content-Type', 'text/javascript');
