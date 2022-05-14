@@ -45,7 +45,7 @@
                                 Modifier
                             </button>
                             <button type="button" class="btn btn-danger"  name="supPartie" id="supPartie" data-bs-toggle="modal" data-bs-target="#modal_supprimer" onclick="supprimer('<%= partie.id %>')">Supprimer</button>
-                            <button type="button" class="btn btn-secondary" id="terminer"  name="terminer"  data-bs-toggle="modal" data-bs-target="#modal_supprimer" onclick="supprimer('t_'+'<%= partie.id %>')"> 
+                            <button type="button" class="btn btn-secondary" id="terminer"  name="terminer"  data-bs-toggle="modal" data-bs-target="#modal_supprimer" onclick="supprimer('t_'+'<%= partie.id %>','<%= partie.terminer %>')"> 
                                 Terminer
                             </button>
                         </td>
@@ -183,7 +183,7 @@
             }
         }
 
-        function supprimer(id){
+        function supprimer(id,terminer){
             
             if(id.slice(0,1)=="t"){
                 document.getElementById('submitAutre').setAttribute("onclick",'modifPartie("'+id+'")')
@@ -193,6 +193,10 @@
                 check.setAttribute('type','checkbox')
                 check.setAttribute('id','checkboxTerminer')
                 check.setAttribute('name','checkboxTerminer')
+                console.log(terminer)
+                if(terminer=="true"){
+                    check.setAttribute('checked','checked')
+                }
                 p=document.createElement('p')
                 label=document.createElement('label')
                 label.setAttribute('for','checkboxTerminer')
