@@ -6,8 +6,8 @@ const Concurrant=require("./concurrantRepository");
 
 const server=require('http').Server(app)
 const io=require('socket.io')(server)
-const socketPartie=require('./PartieSocket')
-const socketConcurrant=require('./ConcurrantSocket')
+const socketPartie=require('./partieSocket')
+const socketConcurrant=require('./concurrantSocket')
 app.use(body.urlencoded({extended:true}))
 const Pool=require('pg').Pool;
 const pool=new Pool({

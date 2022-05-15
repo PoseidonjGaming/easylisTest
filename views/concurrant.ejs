@@ -26,7 +26,7 @@
                     <th style="text-align: center; vertical-align: middle;">
                         <button type="button" class="btn btn-success"  name="ajout" id="ajout" data-bs-toggle="modal" data-bs-target="#modal_modifier"
                             onclick="modifier()"> 
-                            Ajouter un concurrant
+                            Ajouter un concurrent
                         </button>
                         <button id="side" class="btn btn-primary" onclick="openNav()">Ouvrir les notification</button>                       
                     </th>  
@@ -60,7 +60,7 @@
                             </div>
                             <div class="modal-body">
                                 <div class="container-fluid">
-                                    <p id="pModalAutre">Êtes-vous sur de vouloir supprimer le concurrant?</p>
+                                    <p id="pModalAutre">Êtes-vous sur de vouloir supprimer le concurrent?</p>
                                 </div>     
                             </div>
                             <div class="modal-footer">
@@ -126,7 +126,7 @@
                     console.log(id.slice(0,1))
                     document.getElementById('prenom').value=prenom
                     document.getElementById('nom').value=nom
-                    document.getElementById('exampleModalLongTitle').innerHTML="Modification du concurrant" ;
+                    document.getElementById('exampleModalLongTitle').innerHTML="Modification du concurrent" ;
                     document.getElementById('submit').setAttribute("onclick",'modifConcurrant("'+id+'")')
                     
                     
@@ -135,7 +135,7 @@
                     
                     document.getElementById('prenom').value=""
                     document.getElementById('nom').value=""
-                    document.getElementById('exampleModalLongTitle').innerHTML="Ajout d'un concurrant" ;
+                    document.getElementById('exampleModalLongTitle').innerHTML="Ajout d'un concurrent" ;
                     document.getElementById('submit').setAttribute("onclick",'addConcurrant()')
                 
                     
@@ -146,7 +146,7 @@
             
 
             function supprimer(id){
-                document.getElementById('pModalAutre').innerHTML="Voulez-vous supprimer ce concurrant ?"
+                document.getElementById('pModalAutre').innerHTML="Voulez-vous supprimer ce concurrent ?"
                 document.getElementById('submitAutre').setAttribute('onclick',"supprConcurrant('"+id+"')")
                 document.getElementById("submitAutre").setAttribute('class','btn btn-danger')
                 

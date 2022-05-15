@@ -1,7 +1,7 @@
 <%- include('base'); %>
 
 
-  <body>
+  <body id="body">
     <div id="mySidebar" class="sidebar">
         <div class="border-bottom">
             
@@ -91,7 +91,7 @@
                                             Adversaire 1
                                             <select name="concurrant1" id="concurrant1" class="form-select">
                                                 <option id="i1_base" value="">--Choisir une option--</option>
-                                                <% concurrants.forEach(function(concurrant) { %>
+                                                <% concurrants.forEach(function(concurrent) { %>
                                                 <option id="i1_<%= concurrant.id %>" value="c1_<%= concurrant.id %>" ><%= concurrant.prenom %> <%= concurrant.nom %></option>
                                                 <% }); %>
                                             </select>        
@@ -100,7 +100,7 @@
                                             Adversaire 2
                                             <select name="concurrant2" id="concurrant2" class="form-select">
                                                 <option id="i2_base" value="">--Choisir une option--</option>
-                                                <% concurrants.forEach(function(concurrant) { %>
+                                                <% concurrants.forEach(function(concurrent) { %>
                                                 <option id="i2_<%= concurrant.id %>" value="c2_<%= concurrant.id %>"> <%= concurrant.prenom %> <%= concurrant.nom %></option>
                                                 <% }); %>
                                             </select>     
@@ -110,7 +110,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary"  id="submit" onclick="addPartie()">Valider</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modalNon" >Non</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modalNon" >Annuler</button>
                             </div>
                     
                         </div>
@@ -128,11 +128,9 @@
 
         var socket=io()
         var Nbnotif=0
+        //console.log(socket)
         
         
-        socket.on('addPartie',function(msg){
-            console.log(msg)
-        })
        
         socket.on("reloadPartie",function(data){
             populate("parties",data)
@@ -184,7 +182,7 @@
         }
 
         function supprimer(id,terminer){
-            
+           
             if(id.slice(0,1)=="t"){
                 document.getElementById('submitAutre').setAttribute("onclick",'modifPartie("'+id+'")')
                 text="Voulez-vous terminer cette partie?"
@@ -193,7 +191,7 @@
                 check.setAttribute('type','checkbox')
                 check.setAttribute('id','checkboxTerminer')
                 check.setAttribute('name','checkboxTerminer')
-                console.log(terminer)
+                
                 if(terminer=="true"){
                     check.setAttribute('checked','checked')
                 }
@@ -228,7 +226,7 @@
             
             
             socket.emit('addPartieClient',data)
-           
+                   
 
         }
 
@@ -236,6 +234,9 @@
                        
             socket.emit('modifPartieClient',encode([["concurrant1",document.getElementById('concurrant1').selectedOptions[0].getAttribute('id')],
             ["concurrant2",document.getElementById('concurrant2').selectedOptions[0].getAttribute('id')],['id',id]]))
+
+            document.getElementById('modal_modifier').setAttribute('class','modal fade')
+            
         }
 
         function supprPartie(id){
@@ -259,6 +260,7 @@
         
         function populate(tableau,json){
             body=document.getElementById(tableau)
+            
             deleteRow(body)
             Array.from(json).forEach(function(e){
             
@@ -266,7 +268,7 @@
                 row.setAttribute('style',"text-align: center; vertical-align: middle;")
                 concurrant1=document.createElement('td')
                 concurrant1.innerHTML=e.prenom1+" "+e.nom1
-                console.log(concurrant1)
+                
                 row.appendChild(concurrant1)
                 concurrant2=document.createElement('td')
                 concurrant2.innerHTML=e.prenom2+" "+e.nom2
@@ -287,7 +289,7 @@
                 colButton.innerHTML=colButton.innerHTML+" "
                 colButton.appendChild(createButton([e.id],["btn btn-danger","supPartie","#modal_supprimer","Supprimer","supprimer"]))
                 colButton.innerHTML=colButton.innerHTML+" "
-                termineButton=createButton(["t_"+e.id],["btn btn-secondary","terminer","#modal_supprimer","Terminer","supprimer"])
+                termineButton=createButton(["t_"+e.id,e.terminer],["btn btn-secondary","terminer","#modal_supprimer","Terminer","supprimer"])
                 colButton.appendChild(termineButton)
                 
                 row.appendChild(colButton)

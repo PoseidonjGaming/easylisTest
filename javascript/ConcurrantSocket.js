@@ -49,13 +49,13 @@ function modifConcurrantClient(socket){
         prenom=JsonData.prenom
         nom=JsonData.nom
         id=JsonData.id
-        console.log(JsonData)
+        
         pool.query(Concurrant.getConcurrant(),(err,result)=>{
             if(err){
                 throw err
             }
            
-            console.log(Concurrant.updateConcurrant(id,prenom,nom))
+            
             pool.query(Concurrant.updateConcurrant(id,prenom,nom),(err,result)=>{
                 if(err){
                     throw err
@@ -65,7 +65,7 @@ function modifConcurrantClient(socket){
                     if(err){
                         throw err
                     }
-                    console.log(result.rows)
+                    
                     concurrant=result.rows[result.rowCount-1]
                     msg='{"titre":"Un concurrant a été modifiée", "msg":"Le concurrant '+concurrant.prenom+" "+concurrant.nom+' a été modifié"}'
                     
@@ -119,8 +119,7 @@ function terminerConcurrantClient(socket){
         JsonData=JSON.parse(data)
         id=JsonData.id
         etat=JsonData.etat
-        console.log(JsonData)
-        console.log(id)
+       
         pool.query(Concurrant.getConcurrantWhere(id),(err,result)=>{
             if(err){
                 throw err
