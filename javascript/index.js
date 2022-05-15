@@ -3,7 +3,7 @@ var app=express();
 var body=require('body-parser');
 const Partie=require("./partieRepository")
 const Concurrant=require("./concurrantRepository");
-
+const requeteBundle=require("./requete")
 const server=require('http').Server(app)
 const io=require('socket.io')(server)
 const socketPartie=require('./partieSocket')
@@ -27,10 +27,7 @@ app.get('/CSS/style.css', function(req, res) {
     res.set('Content-Type', 'text/css');
     res.sendFile('E:/Projet perso/easylisTest/CSS/style.css');
 });
-app.get('/CSS/badgePartie.css', function(req, res) {
-    res.set('Content-Type', 'text/css');
-    res.sendFile('E:/Projet perso/easylisTest/CSS/badgePartie.css');
-});
+
 
 app.get('/socket.io/socket.io.js',(req,res)=>{
     res.set('Content-Type', 'text/javascript');
@@ -69,10 +66,19 @@ app.get("/parties",(req,res)=>{
         parties=result.rows
         
         pool.query(Concurrant.getConcurrant(),(err,result)=>{
-            res.render('parties.ejs',{
-                parties: parties,
-                concurrants:result.rows
+            concurrants=result.rows
+            pool.query(requeteBundle.where(requeteBundle.select("partie",null),[['',"terminer",false]]),(err,result)=>{
+                if(err){
+                    throw err
+                }
+                
+                res.render('parties.ejs',{
+                    parties: parties,
+                    concurrants:concurrants,
+                    nbPartie:result.rowCount
+                })
             })
+            
             
         })        
     })
@@ -107,11 +113,13 @@ io.on('connection',(socket)=>{
     socketPartie.addPartieClient(socket)
     socketPartie.modifPartieClient(socket)
     socketPartie.suppPartieClient(socket)
+    socketPartie.suppAllPartieClient(socket)
     socketPartie.terminerPartieClient(socket)
 
     socketConcurrant.addConcurrantClient(socket)
     socketConcurrant.modifConcurrantClient(socket)
     socketConcurrant.suppConcurrantClient(socket)
+    socketConcurrant.suppAllConcurrantClient(socket)
     
     
     

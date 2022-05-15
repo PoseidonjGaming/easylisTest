@@ -1,4 +1,4 @@
-<%- include('base'); %>
+<%- include('base',{titre: 'Concurrents'}); %>
   <style>
     .example-wrapper { font: 18px/1.5 sans-serif; background-color: #F5F5F5;}
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
@@ -29,6 +29,12 @@
                             Ajouter un concurrent
                         </button>
                         <button id="side" class="btn btn-primary" onclick="openNav()">Ouvrir les notification</button>                       
+                        <button type="button" class="btn btn-danger"  name="sup" id="sup" data-bs-toggle="modal" data-bs-target="#modal_supprimer" onclick="supprimer('all')"> Supprimer plusieurs parties</button>
+                    </th>
+                    <th style="text-align: center; vertical-align: middle;"> 
+                        <label for="checkall">
+                            <input type="checkbox" id='checkall' name="checkall" onchange="check('all')"> Tout cocher
+                        </label>
                     </th>  
                 </tr>
             </thead>
@@ -45,6 +51,9 @@
                                 Supprimer
                             </button>
                         </td>
+                        <td style="text-align: center; vertical-align: middle;">
+                            <input type="checkbox" id='c_<%= user.id %>' name="c_<%= user.id %>" onchange="check('<%= user.id %>')">
+                        </td>
                     </tr> 
                 <% }); %>
                 </tbody>
@@ -55,7 +64,7 @@
                     <div class="modal-dialog" >
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="supModalLongTitle"> Suppression de la série </h5>
+                                <h5 class="modal-title" id="supModalLongTitle"> Suppression du concurrent </h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
@@ -77,7 +86,7 @@
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLongTitle"> Modification de la série </h5>
+                                    <h5 class="modal-title" id="exampleModalLongTitle"> Modification du concurrent </h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
@@ -93,7 +102,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-primary"  id="submit" onclick="addConcurrant()">Valider</button>
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modalNon" >Non</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modalNon" >Annuler</button>
                                 </div>
                         
                             </div>
@@ -108,9 +117,12 @@
         <script>
             var socket=io()
             var Nbnotif=0
+            var Ids=[]
             
-            
-            
+            Array.from(document.getElementById('concurrants').children).forEach(function(e){
+                e.children[3].children[0].checked=false
+            })
+            document.getElementById('checkall').checked=false
         
             socket.on("reloadConcurrant",function(data){
                 populate("concurrants",data)
@@ -120,6 +132,41 @@
                 info(Jsondata.titre,Jsondata.msg)
             })
 
+
+            function check(id){
+                checks=Array.from(document.getElementById('concurrants').children)
+                if(id=="all"){
+                    if(document.getElementById('checkall').checked){
+                    
+                        checks.forEach(function(e){
+                            e.children[3].children[0].checked=true
+                            if(checks.indexOf(e)==0){
+                                Ids.push(["","id",e.children[3].children[0].getAttribute('id').slice(2,e.children[3].children[0].getAttribute('id').lenght)])
+                            }
+                            else{
+                                Ids.push(["OR","id",e.children[3].children[0].getAttribute('id').slice(2,e.children[3].children[0].getAttribute('id').lenght)])
+                            }
+                            
+                        })
+                    }
+                    else{
+                        Array.from(document.getElementById('concurrants').children).forEach(function(e){
+                            e.children[3].children[0].checked=false
+                            Ids.splice(Ids.indexOf(e.children[3].children[0].getAttribute('id')))
+                        })
+                    }
+                    
+                }
+                else{
+                    clickCheck=document.getElementById('c_'+id).checked
+                    if(clickCheck){
+                        Ids.push(["","partie.id",document.getElementById('c_'+id).getAttribute('id').slice(2,document.getElementById('c_'+id).getAttribute('id').lenght)])
+                    }
+                    else{
+                        Ids.splice(Ids.indexOf(document.getElementById('c_'+id).getAttribute('id')))
+                    }
+                }
+            }
             function modifier(id,nom,prenom){
                 
                 if(id!=null){
@@ -146,8 +193,15 @@
             
 
             function supprimer(id){
-                document.getElementById('pModalAutre').innerHTML="Voulez-vous supprimer ce concurrent ?"
-                document.getElementById('submitAutre').setAttribute('onclick',"supprConcurrant('"+id+"')")
+                if(id=="all"){
+                    document.getElementById('submitAutre').setAttribute('onclick',"supprAllConcurrant()")
+                    document.getElementById('pModalAutre').innerHTML="Voulez-vous supprimer ces concurrents ?"
+                }
+                else{
+                    document.getElementById('pModalAutre').innerHTML="Voulez-vous supprimer ce concurrent ?"
+                    document.getElementById('submitAutre').setAttribute('onclick',"supprConcurrant('"+id+"')")
+                }
+               
                 document.getElementById("submitAutre").setAttribute('class','btn btn-danger')
                 
                 
@@ -170,6 +224,15 @@
 
             function supprConcurrant(id){
                 socket.emit('suppConcurrantClient',encode([['id',id]]))
+            }
+
+            function supprConcurrant(id){
+                socket.emit('suppAllConcurrantClient',Ids)
+            }
+
+            function supprAllConcurrant(id){
+                socket.emit('suppAllConcurrantClient',Ids)
+                document.getElementById('checkall').checked=false
             }
 
             function openNav() {
@@ -203,8 +266,16 @@
                     colButton.appendChild(createButton([e.id,e.prenom,e.nom],["btn btn-warning","modifClient","#modal_modifier","Modifier","modifier"]))
                     colButton.innerHTML=colButton.innerHTML+" "
                     colButton.appendChild(createButton([e.id],["btn btn-danger","supConcurrant","#modal_supprimer","Supprimer","supprimer"]))
-
+                    colCheck=document.createElement('td')
+                    colCheck.setAttribute('style','text-align: center; vertical-align: middle;')
+                    Check=document.createElement('input')
+                    Check.type="checkbox"
+                    Check.setAttribute('id','c_'+e.id)
+                    Check.setAttribute('name','c_'+e.id)
+                    Check.setAttribute('onchanger',"check('"+e.id+"')")
+                    colCheck.appendChild(Check)
                     row.appendChild(colButton)
+                    row.appendChild(colCheck)
                     body.appendChild(row)
                     
                     

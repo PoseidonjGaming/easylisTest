@@ -108,6 +108,40 @@ function suppPartieClient(socket){
         
     })
 }
+function suppAllPartieClient(socket){
+    socket.on('suppAllPartieClient',(data)=>{
+       
+        
+
+        pool.query(Partie.getPartieWheres(data),(err,result)=>{
+            if(err){
+                throw err
+            }
+            partie=result.rows[0]
+            
+            pool.query(Partie.deletesFrom(data),(err,result)=>{
+                if(err){
+                    throw err
+                }
+               
+                pool.query(Partie.getPartie(),(err,result)=>{
+                    if(err){
+                        throw err
+                    }
+                    
+                    msg='{"titre":"Plusieurs parties ont été supprimées", "msg":"Plusieurs parties ont été supprimées"}'
+                    
+                    socket.broadcast.emit("newsPartie",msg);
+                    socket.emit('reloadPartie',result.rows)
+                })
+                
+            })
+        })
+       
+        
+        
+    })
+}
 
 function terminerPartieClient(socket){
     socket.on('terminerPartieClient',(data)=>{
@@ -143,5 +177,6 @@ module.exports={
    addPartieClient,
    modifPartieClient,
    suppPartieClient,
+   suppAllPartieClient,
    terminerPartieClient
 }

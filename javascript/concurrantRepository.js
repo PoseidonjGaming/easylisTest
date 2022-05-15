@@ -19,11 +19,20 @@ function updateConcurrant(id,prenom,nom){
 function deleteFrom(id){
    return requeteBundle.deleteFrom("concurrant",id)
 }
+function deletesFrom(rows){
+    return requeteBundle.where("DELETE FROM concurrant",rows)
+}
+
+function getConcurrantWheres(rows){
+    return requeteBundle.where(requeteBundle.select('concurrant',null),rows)
+}
 
 module.exports={
     getConcurrant,
     getConcurrantWhere,
     insertConcurrant,
     updateConcurrant,
-    deleteFrom
+    deleteFrom,
+    deletesFrom,
+    getConcurrantWheres
 }

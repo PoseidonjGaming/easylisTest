@@ -1,4 +1,5 @@
 const Concurrant=require("./ConcurrantRepository")
+const Partie=require('./partieRepository')
 const Pool=require('pg').Pool;
 var pool=new Pool({
     user:'postgres',
@@ -67,7 +68,7 @@ function modifConcurrantClient(socket){
                     }
                     
                     concurrant=result.rows[result.rowCount-1]
-                    msg='{"titre":"Un concurrant a été modifiée", "msg":"Le concurrant '+concurrant.prenom+" "+concurrant.nom+' a été modifié"}'
+                    msg='{"titre":"Un concurrant a été modifié", "msg":"Le concurrant '+concurrant.prenom+" "+concurrant.nom+' a été modifié"}'
                     
                     socket.broadcast.emit("newsConcurrant",msg);
                     socket.emit('reloadConcurrant',result.rows)
@@ -91,16 +92,14 @@ function suppConcurrantClient(socket){
             concurrant=result.rows[0]
             
             pool.query(Concurrant.deleteFrom(id),(err,result)=>{
-                if(err){
-                    throw err
-                }
+                
                
                 pool.query(Concurrant.getConcurrant(),(err,result)=>{
                     if(err){
                         throw err
                     }
                     
-                    msg='{"titre":"Une concurrant a été supprimée", "msg":"Le concurrant '+concurrant.prenom+" "+concurrant.nom+' a été supprimer"}'
+                    msg='{"titre":"Un concurrant a été supprimée", "msg":"Le concurrant '+concurrant.prenom+" "+concurrant.nom+' a été supprimé"}'
                     
                     socket.broadcast.emit("newsConcurrant",msg);
                     socket.emit('reloadConcurrant',result.rows)
@@ -114,39 +113,41 @@ function suppConcurrantClient(socket){
     })
 }
 
-function terminerConcurrantClient(socket){
-    socket.on('terminerConcurrantClient',(data)=>{
-        JsonData=JSON.parse(data)
-        id=JsonData.id
-        etat=JsonData.etat
-       
-        pool.query(Concurrant.getConcurrantWhere(id),(err,result)=>{
+function suppAllConcurrantClient(socket){
+    socket.on('suppAllConcurrantClient',(data)=>{
+        
+        
+        pool.query(Concurrant.getConcurrantWheres(data),(err,result)=>{
             if(err){
                 throw err
             }
-           
             concurrant=result.rows[0]
-            pool.query(Concurrant.terminerConcurrant(id,etat),(err,result)=>{
-                if(err){
-                    throw err
-                }
-                pool.query(Concurrant.getConcurrant(),(err,result)=>{
-                    msg='{"titre":"Une concurrant a été modifiée", "msg":""}'
+            
+            pool.query(Concurrant.deletesFrom(data),(err,result)=>{
                 
-                    socket.broadcast.emit("news",msg);
-                    socket.emit('reload',result.rows)
+                pool.query(Concurrant.getConcurrant(),(err,result)=>{
+                    if(err){
+                        throw err
+                    }
+                    
+                    msg='{"titre":"Plusieurs concurrant ont été supprimés", "msg":"Plusieurs concurrant ont été supprimés"}'
+                    
+                    socket.broadcast.emit("newsConcurrant",msg);
+                    socket.emit('reloadConcurrant',result.rows)
                 })
-               
                 
             })
         })
+       
+        
         
     })
 }
+
 
 module.exports={
    addConcurrantClient,
    modifConcurrantClient,
    suppConcurrantClient,
-   terminerConcurrantClient
+  suppAllConcurrantClient
 }

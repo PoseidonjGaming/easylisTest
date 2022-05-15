@@ -32,11 +32,25 @@ function deleteFrom(id){
     return requeteBundle.deleteFrom("partie",id)
 }
 
+function deletesFrom(rows){
+    return requeteBundle.where("DELETE FROM partie",rows)
+}
+
+function getPartieWheres(rows){
+    return requeteBundle.where(requeteBundle.inner(requeteBundle.select("partie",['c1.prenom AS Prenom1',
+    'c1.nom AS NOM1','adversaire2','c2.prenom AS Prenom2','c2.nom AS Nom2']),
+    [[['partie','adversaire1'],['concurrant','c1','id']],[["partie",'adversaire2'],["concurrant",'c2','id']]]),
+    rows)
+}
+
+
 module.exports={
     getPartie,
     insertPartie,
     updatePartie,
     deleteFrom,
     terminerPartie,
-    getPartieWhere
+    getPartieWhere,
+    deletesFrom,
+    getPartieWheres
 }

@@ -1,4 +1,4 @@
-<%- include('base'); %>
+<%- include('base',{titre: 'Parties'}); %>
 
 
   <body id="body">
@@ -12,7 +12,7 @@
             <p>Notification</p>
         </div>
         <div id="notif">
-            
+           
         </div>
       </div>
     <div id="main">
@@ -21,7 +21,7 @@
                 <tr>
                     <th style="text-align: center; vertical-align: middle;">Adversaire 1</th>
                     <th style="text-align: center; vertical-align: middle;">Adversaire 2</th>
-                    <th style="text-align: center; vertical-align: middle;">Etat</th>
+                    <th style="text-align: center; vertical-align: middle;">Etat (Il y a <%= nbPartie %> parties non terminées)</th>
                     
                     <th style="text-align: center; vertical-align: middle;">
                         <button type="button" class="btn btn-success"  name="ajout" id="ajout" data-bs-toggle="modal" data-bs-target="#modal_modifier"
@@ -29,8 +29,13 @@
                              Ajouter une partie
                         </button>
                         <button id="side" class="btn btn-primary" onclick="openNav()">Ouvrir les notification</button>       
+                        <button type="button" class="btn btn-danger"  name="sup" id="sup" data-bs-toggle="modal" data-bs-target="#modal_supprimer" onclick="supprimer('all')"> Supprimer plusieurs parties</button>
                     </th>
-                  
+                    <th style="text-align: center; vertical-align: middle;"> 
+                        <label for="checkall">
+                            <input type="checkbox" id='checkall' name="checkall" onchange="check('all')"> Tout cocher
+                        </label>
+                    </th>
                 </tr>
             </thead>
             <tbody id="parties">
@@ -49,7 +54,9 @@
                                 Terminer
                             </button>
                         </td>
-                       
+                        <td style="text-align: center; vertical-align: middle;">
+                            <input type="checkbox" id='c_<%= partie.id %>' name="c_<%= partie.id %>" onchange="check('<%= partie.id %>')">
+                        </td>
                     </tr> 
                 <% }); %>
             </tbody>
@@ -91,7 +98,7 @@
                                             Adversaire 1
                                             <select name="concurrant1" id="concurrant1" class="form-select">
                                                 <option id="i1_base" value="">--Choisir une option--</option>
-                                                <% concurrants.forEach(function(concurrent) { %>
+                                                <% concurrants.forEach(function(concurrant) { %>
                                                 <option id="i1_<%= concurrant.id %>" value="c1_<%= concurrant.id %>" ><%= concurrant.prenom %> <%= concurrant.nom %></option>
                                                 <% }); %>
                                             </select>        
@@ -100,7 +107,7 @@
                                             Adversaire 2
                                             <select name="concurrant2" id="concurrant2" class="form-select">
                                                 <option id="i2_base" value="">--Choisir une option--</option>
-                                                <% concurrants.forEach(function(concurrent) { %>
+                                                <% concurrants.forEach(function(concurrant) { %>
                                                 <option id="i2_<%= concurrant.id %>" value="c2_<%= concurrant.id %>"> <%= concurrant.prenom %> <%= concurrant.nom %></option>
                                                 <% }); %>
                                             </select>     
@@ -128,8 +135,12 @@
 
         var socket=io()
         var Nbnotif=0
-        //console.log(socket)
-        
+        var Ids=[]
+        Array.from(document.getElementById('parties').children).forEach(function(e){
+            e.children[4].children[0].checked=false
+        })
+        document.getElementById('checkall').checked=false
+                        
         
        
         socket.on("reloadPartie",function(data){
@@ -139,6 +150,43 @@
             Jsondata=JSON.parse(data)
             info(Jsondata.titre,Jsondata.msg)
         })
+
+        function check(id){
+            checks=Array.from(document.getElementById('parties').children)
+            if(id=="all"){
+                if(document.getElementById('checkall').checked){
+                   
+                    checks.forEach(function(e){
+                        e.children[4].children[0].checked=true
+                        if(checks.indexOf(e)==0){
+                            Ids.push(["","partie.id",e.children[4].children[0].getAttribute('id').slice(2,e.children[4].children[0].getAttribute('id').lenght)])
+                        }
+                        else{
+                            Ids.push(["OR","partie.id",e.children[4].children[0].getAttribute('id').slice(2,e.children[4].children[0].getAttribute('id').lenght)])
+                        }
+                        
+                    })
+                }
+                else{
+                    Array.from(document.getElementById('parties').children).forEach(function(e){
+                        e.children[4].children[0].checked=false
+                        Ids.splice(Ids.indexOf(e.children[4].children[0].getAttribute('id')))
+                    })
+                }
+               
+            }
+            else{
+                clickCheck=document.getElementById('c_'+id).checked
+                if(clickCheck){
+                    Ids.push(["","partie.id",document.getElementById('c_'+id).getAttribute('id').slice(2,document.getElementById('c_'+id).getAttribute('id').lenght)])
+                }
+                else{
+                    Ids.splice(Ids.indexOf(document.getElementById('c_'+id).getAttribute('id')))
+                }
+                
+            }
+            
+        }
 
         function modifier(id,index1,index2){
             concurrant1=document.getElementById('concurrant1')
@@ -206,14 +254,21 @@
                 document.getElementById('pModalAutre').appendChild(p)
                 document.getElementById("submitAutre").setAttribute('class','btn btn-primary')
                 document.getElementById("submitAutre").setAttribute('onclick',"terminerPartie('"+id+"')")
-                document.getElementById("submitAutre").innerHTML="Confirmer"
+                
+                document.getElementById('supModalLongTitle').innerHTML="Terminer la partie"
                 
                 
+                
+            }
+            else if(id=="all"){
+                document.getElementById('submitAutre').setAttribute('onclick',"supprAllPartie()")
             }
             else{
                 document.getElementById('pModalAutre').innerHTML="Voulez-vous supprimer cette partie ?"
                 document.getElementById('submitAutre').setAttribute('onclick',"supprPartie('"+id+"')")
                 document.getElementById("submitAutre").setAttribute('class','btn btn-danger')
+                document.getElementById('supModalLongTitle').innerHTML="Suppression de la partie"
+                
             }
             
         }
@@ -233,14 +288,16 @@
         function modifPartie(id){
                        
             socket.emit('modifPartieClient',encode([["concurrant1",document.getElementById('concurrant1').selectedOptions[0].getAttribute('id')],
-            ["concurrant2",document.getElementById('concurrant2').selectedOptions[0].getAttribute('id')],['id',id]]))
-
-            document.getElementById('modal_modifier').setAttribute('class','modal fade')
-            
+            ["concurrant2",document.getElementById('concurrant2').selectedOptions[0].getAttribute('id')],['id',id]]))           
         }
 
         function supprPartie(id){
             socket.emit('suppPartieClient',encode([['id',id]]))
+        }
+
+        function supprAllPartie(id){
+            socket.emit('suppAllPartieClient',Ids)
+            document.getElementById('checkall').checked=false
         }
 
         function terminerPartie(id){
@@ -260,7 +317,7 @@
         
         function populate(tableau,json){
             body=document.getElementById(tableau)
-            
+            var terminer=0
             deleteRow(body)
             Array.from(json).forEach(function(e){
             
@@ -273,15 +330,15 @@
                 concurrant2=document.createElement('td')
                 concurrant2.innerHTML=e.prenom2+" "+e.nom2
                 row.appendChild(concurrant2)
-                terminer=document.createElement('td')
+                terminerTd=document.createElement('td')
                 if(e.terminer){
-                    terminer.innerHTML="Partie terminée "
+                    terminerTd.innerHTML="Partie terminée "
                 }
                 else{
-                    terminer.innerHTML="Partie à organiser "
+                    terminerTd.innerHTML="Partie à organiser "
                 }
                 
-                row.appendChild(terminer)
+                row.appendChild(terminerTd)
                 
                 colButton=document.createElement('td')
                 colButton.setAttribute('style','text-align: center; vertical-align: middle;')
@@ -293,10 +350,26 @@
                 colButton.appendChild(termineButton)
                 
                 row.appendChild(colButton)
+                colCheck=document.createElement('td')
+                colCheck.setAttribute('style','text-align: center; vertical-align: middle;')
+                Check=document.createElement('input')
+                Check.type="checkbox"
+                Check.setAttribute('id','c_'+e.id)
+                Check.setAttribute('name','c_'+e.id)
+                Check.setAttribute('onchanger',"check('"+e.id+"')")
+                colCheck.appendChild(Check)
+                row.appendChild(colCheck)
+
                 body.appendChild(row)
+                if(!e.terminer){
+                    terminer++
+                }
+               
                 
             
         })
+        
+        document.getElementById("main").children[0].children[0].children[0].children[2].innerHTML="Etat (Il y a "+terminer.toString()+" parties non terminées)"
     }
     function ReqReload(){
             socket.emit("reqReloadPartie")

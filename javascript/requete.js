@@ -30,7 +30,7 @@ function where(req,selection){
     for(i=0; i<selection.length; i++){
         
         if(i!=0){
-            req=req+" "+selection[i][0]+selection[i][1]+" = "+selection[i][2]
+            req=req+" "+selection[i][0]+" "+selection[i][1]+" = "+selection[i][2]
         }
         else{
             req=req+" "+selection[i][1]+" = "+selection[i][2]
