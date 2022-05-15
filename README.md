@@ -21,7 +21,7 @@ socket.io: Ce module permet au serveur d'envoyer de lui-même des données au cl
 
 ## Paramètrage
 
-Pour paramètrer la connection au serveur de base données, il faut modifier dans les fichiers ConcurrantSocket.js et PartieSocket.js, la const pool.
+Pour paramètrer la connection au serveur de base données, il faut modifier dans les fichiers concurrantSocket.js et partieSocket.js, la const pool.
 
 ```javascript
 var pool=new Pool({
@@ -47,7 +47,7 @@ port: Le port d'écoute du serveur de base données. (5432 est le port par défa
 
 ## Utilisation générale
 
-La procédure d'utilisation générale est similaire pour les parties et les concurrants.
+La procédure d'utilisation générale est similaire pour les parties et les concurrents.
 
 Lorsqu'un utilisateur modifie la base de donnée,ajoute modifie ou supprime une entrée, une notification est envoyée à tous les utilisateurs sauf celui qui a modifié la base (boule rouge dans la bouton "Ouvrir les notification").
 
@@ -87,11 +87,11 @@ Pour supprimer une partie, les utilisateurs devront cliquer sur le bouton "Suppr
 *pop-up de suppression*
 ![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/b0e35e5ecdd1ad0cbc6459807e7e159c43952fed/documentation/modal%20partie%20sup.png?raw=true)
 
-## Concurrant
+## Concurrent
 
 ### Ajout
 
-Pour ajouter un concurrant, les utilisateurs devront cliquer sur le bouton "Ajouter". Une pop-up (fenêtre qui s'ouvre automatiquement suite à une action) s'affichera alors et les utiliseurs devront remplir les champs nom et prénom puis ils devront cliquer sur le bouton "Valider" pour ajouter un concurrant
+Pour ajouter un concurrent, les utilisateurs devront cliquer sur le bouton "Ajouter". Une pop-up (fenêtre qui s'ouvre automatiquement suite à une action) s'affichera alors et les utiliseurs devront remplir les champs nom et prénom puis ils devront cliquer sur le bouton "Valider" pour ajouter un concurrent
 
 *pop-up d'ajout*
 ![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/f56def5aae9cec468aa1d2b5c0569563cf22a342/documentation/modal%20concurrant.png?raw=true)
@@ -99,7 +99,7 @@ Pour ajouter un concurrant, les utilisateurs devront cliquer sur le bouton "Ajou
 
 ### Modification
 
-Pour modifier un concurrant, les utilisateurs devront cliquer sur le bouton "Modifier" sur la ligne correspondant au concurrant qu'ils veulent modifier. Une pop-up s'affichera alors avec les champs nom et prénom courants préremplies et les utiliseurs devront remplir les champs avec les nom et prénom de leur choix puis ils devront cliquer sur le bouton "Valider" pour modifier le concurrant.
+Pour modifier un concurrent, les utilisateurs devront cliquer sur le bouton "Modifier" sur la ligne correspondant au concurrent qu'ils veulent modifier. Une pop-up s'affichera alors avec les champs nom et prénom courants préremplies et les utiliseurs devront remplir les champs avec les nom et prénom de leur choix puis ils devront cliquer sur le bouton "Valider" pour modifier le concurrent.
 
 
 *pop-up de modification*
@@ -107,7 +107,7 @@ Pour modifier un concurrant, les utilisateurs devront cliquer sur le bouton "Mod
 
 ### Suppression
 
-Pour supprimer un concurrant, les utilisateurs devront cliquer sur le bouton "Supprimer" sur la la ligne correspondant au concurrant qu'ils veulent supprimer. Une pop-up s'affichera alors puis cliquer sur le bouton "Oui" pour supprimer la partie.
+Pour supprimer un concurrent, les utilisateurs devront cliquer sur le bouton "Supprimer" sur la la ligne correspondant au concurrent qu'ils veulent supprimer. Une pop-up s'affichera alors puis cliquer sur le bouton "Oui" pour supprimer la partie.
 
 
 *pop-up de suppression*
