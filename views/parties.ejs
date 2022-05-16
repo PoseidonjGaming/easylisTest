@@ -262,6 +262,8 @@
             }
             else if(id=="all"){
                 document.getElementById('submitAutre').setAttribute('onclick',"supprAllPartie()")
+                document.getElementById('pModalAutre').innerHTML="Voulez-vous supprimer ces parties ?"
+                document.getElementById("submitAutre").setAttribute('class','btn btn-danger')
             }
             else{
                 document.getElementById('pModalAutre').innerHTML="Voulez-vous supprimer cette partie ?"
