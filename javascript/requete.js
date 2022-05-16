@@ -1,3 +1,4 @@
+//Renvoie "SELECT " plus les champs passés en paramètre
 function select(table,champs){
 
     var select="SELECT"
@@ -24,6 +25,7 @@ function select(table,champs){
 
 }
 
+//Renvoie la requête plus "WHERE " plus les champs passés en paramètre
 function where(req,selection){
     req=req+" WHERE"
     
@@ -39,10 +41,12 @@ function where(req,selection){
     return req
 }
 
+//Renvoie la requête plus "ORDER BY " plus la direction ("ASC" ou "DESC") plus le champ de trie
 function order(req,direction,champ){
     return req+" ORDER BY "+champ+" "+direction
 }
 
+//Renvoi la requête "INNER JOIN " plus la table à joindre passé en paramètre plus "ON" plus le "lien" entre 2 table 
 function inner(req,inner){
     
     for (i = 0; i < inner.length; i++) {
@@ -58,6 +62,7 @@ function inner(req,inner){
     return req
 }
 
+//Renvoie "INSERT INTO " plus la table dans laquelle insérer l'élément plus les élément. (NbRows consitue l'id de l'élément)
 function insert(table,element, nbRows){
     req="INSERT INTO "+table+" VALUES ("+nbRows
     for (i = 0; i < element.length; i++) {
@@ -73,11 +78,13 @@ function insert(table,element, nbRows){
     return req+");"
 }
 
+//Renvoie "DELETE FROM " plus la table dans laquelle supprimer l'élément plus "WHERE id=" plus l'id de l'élément
 function deleteFrom(table,row){
     req="DELETE FROM "+table
     return where(req,[["","id",row]])
 }
 
+//Renvoie "UPDATE " plus la table dans laquelle modifier l'élément plus les champs à modifier de l'élément plus "WHERE id=" plus l'id de l'élément
 function update(table,modif,id){
     req="UPDATE "+table+" SET "
     for (i = 0; i < modif.length; i++) {

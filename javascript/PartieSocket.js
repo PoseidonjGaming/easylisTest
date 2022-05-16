@@ -7,6 +7,8 @@ var pool=new Pool({
     password:'P@ssw0rd',
     port:5432
 });
+
+//Le serveur écoute si un client ajoute une partie
 function addPartieClient(socket){
     socket.on('addPartieClient',(data)=>{
         JsonData=JSON.parse(data)
@@ -38,6 +40,8 @@ function addPartieClient(socket){
     })
 }
 
+
+//Le serveur écoute si un client modifie une partie
 function modifPartieClient(socket){
     socket.on('modifPartieClient',(data)=>{
         JsonData=JSON.parse(data)
@@ -74,6 +78,7 @@ function modifPartieClient(socket){
     })
 }
 
+//Le serveur écoute si un client supprime une partie
 function suppPartieClient(socket){
     socket.on('suppPartieClient',(data)=>{
         JsonData=JSON.parse(data)
@@ -108,6 +113,8 @@ function suppPartieClient(socket){
         
     })
 }
+
+////Le serveur écoute si un client supprime plusieurs parties
 function suppAllPartieClient(socket){
     socket.on('suppAllPartieClient',(data)=>{
        
@@ -143,6 +150,8 @@ function suppAllPartieClient(socket){
     })
 }
 
+
+//Le serveur écoute si un client termine une partie
 function terminerPartieClient(socket){
     socket.on('terminerPartieClient',(data)=>{
         JsonData=JSON.parse(data)

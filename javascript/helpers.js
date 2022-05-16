@@ -1,12 +1,12 @@
 
-
+//Supprime les lignes du tableau passé en paramètre
 function deleteRow(tableau){
     Array.from(tableau.children).forEach(function(e){
         e.remove()
     })
 }
 
-
+//Retourne les données en chaîne de caractères pour le JSON
 function encode(data){
     json="{"
     for (let i = 0; i < data.length; i++) {
@@ -20,6 +20,7 @@ function encode(data){
     return json+"}"
 }
 
+//Crée un bouton avec la liste des attributs (id, le modal à appeler...)
 function createButton(values,attributes){
     button=document.createElement('button')
     button.setAttribute('type',"button")
@@ -43,7 +44,7 @@ function createButton(values,attributes){
     return button
 }
 
-
+//Crée la notification dans le panneau des notifications
 function info(titre,msg){
     
     
@@ -72,7 +73,8 @@ function info(titre,msg){
     notif()
   }
 
-  function notif(){
+//Crée ou modifie la bulle des notifications
+function notif(){
     
     button=document.getElementById("side")
     if(Nbnotif==0){

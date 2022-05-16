@@ -133,9 +133,10 @@
     <script src="socket.io/socket.io.js"></script>
     <script>
 
-        var socket=io()
+        var socket=io() 
         var Nbnotif=0
-        var Ids=[]
+        var Ids=[] //liste des id des éléments à supprimer
+        //Décoche les checkbox des parties ainsi que la checkbox pour tous cocher
         Array.from(document.getElementById('parties').children).forEach(function(e){
             e.children[4].children[0].checked=false
         })
@@ -143,19 +144,22 @@
                         
         
        
+        //Ecoute l'évènement lorsque le serveur renvoie toutes les parties
         socket.on("reloadPartie",function(data){
             populate("parties",data)
         })
+        //Ecoute l'évènement lorsque le serveur envoie une 'notification'
         socket.on("newsPartie",function(data){
             Jsondata=JSON.parse(data)
             info(Jsondata.titre,Jsondata.msg)
         })
 
+        //Fonction appelée lorsque l'on coche ou décoche la checkbox "Tout cocher" ou une checkbox en particulier
         function check(id){
             checks=Array.from(document.getElementById('parties').children)
             if(id=="all"){
                 if(document.getElementById('checkall').checked){
-                   
+                    //Coche toutes les checkbox et ajoute l'id de toutes les checkbox dans Ids
                     checks.forEach(function(e){
                         e.children[4].children[0].checked=true
                         if(checks.indexOf(e)==0){
@@ -168,6 +172,7 @@
                     })
                 }
                 else{
+                    //Décoche toutes les checkbox et supprime l'id de toutes les checkbox dans Ids
                     Array.from(document.getElementById('parties').children).forEach(function(e){
                         e.children[4].children[0].checked=false
                         Ids.splice(Ids.indexOf(e.children[4].children[0].getAttribute('id')))
@@ -176,11 +181,14 @@
                
             }
             else{
+                
                 clickCheck=document.getElementById('c_'+id).checked
                 if(clickCheck){
+                    //Coche la checkbox qui a l'id passé en paramètre et ajoute cet id dans Ids
                     Ids.push(["","partie.id",document.getElementById('c_'+id).getAttribute('id').slice(2,document.getElementById('c_'+id).getAttribute('id').lenght)])
                 }
                 else{
+                    //Décoche la checkbox qui a l'id passé en paramètre et supprime cet id dans Ids
                     Ids.splice(Ids.indexOf(document.getElementById('c_'+id).getAttribute('id')))
                 }
                 
@@ -188,6 +196,7 @@
             
         }
 
+        //Modifie le modal #modal_modal en fonction de l'ajout ou modification
         function modifier(id,index1,index2){
             concurrant1=document.getElementById('concurrant1')
             concurrant2=document.getElementById('concurrant2')
@@ -213,7 +222,7 @@
             }
             
         }
-
+        //Sélectionne les bon concurrents en fonction de l'ajout ou modification
         function select(list,index){
             if(list!=null){
                 Array.from(list.options).forEach(function(e){
@@ -229,6 +238,7 @@
             }
         }
 
+        //Modifie le modal #modal_supprimer en fonction de la suppression de une ou plusieurs parties ou la fin de partie
         function supprimer(id,terminer){
            
             if(id.slice(0,1)=="t"){
@@ -276,7 +286,7 @@
             
         }
 
-        
+        //Emet l'évènement d'ajout de partie
         function addPartie(){
             
             data=encode([["concurrant1",document.getElementById('concurrant1').selectedOptions[0].getAttribute('id')],
@@ -288,36 +298,43 @@
 
         }
 
+        //Emet l'évènement de la modification d'une partie
         function modifPartie(id){
                        
             socket.emit('modifPartieClient',encode([["concurrant1",document.getElementById('concurrant1').selectedOptions[0].getAttribute('id')],
             ["concurrant2",document.getElementById('concurrant2').selectedOptions[0].getAttribute('id')],['id',id]]))           
         }
 
+        //Emet l'évènement de la suppression d'une partie
         function supprPartie(id){
             socket.emit('suppPartieClient',encode([['id',id]]))
         }
 
+        //Emet l'évènement de la suppression de plusieurs parties
         function supprAllPartie(id){
             socket.emit('suppAllPartieClient',Ids)
             document.getElementById('checkall').checked=false
         }
 
+        //Emet l'évènement de la fin d'une partie
         function terminerPartie(id){
             socket.emit("terminerPartieClient",encode([['id',id.slice(2,id.lenght)],['etat',document.getElementById('checkboxTerminer').checked]]))
         }
 
+        //Ouvre le panneau des notifications
         function openNav() {
             document.getElementById("mySidebar").style.left = "0px";
             document.getElementById('side').setAttribute('onclick','closeNav()')
         }
 
+        //Ferme le panneau des notifications
         function closeNav() {
             
             document.getElementById("mySidebar").style.left= "-300px";
             document.getElementById('side').setAttribute('onclick','openNav()')
         }
         
+        //Supprime puis ajoute les nouvelles parties et les parties modifiées
         function populate(tableau,json){
             body=document.getElementById(tableau)
             var terminer=0
@@ -374,6 +391,8 @@
         
         document.getElementById("main").children[0].children[0].children[0].children[2].innerHTML="Etat (Il y a "+terminer.toString()+" parties non terminées)"
     }
+
+    //Emet la requête du rechargement des parties ("Rafraîchir") et supprime la bulle des notifications
     function ReqReload(){
             socket.emit("reqReloadPartie")
             

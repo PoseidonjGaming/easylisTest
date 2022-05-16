@@ -117,27 +117,31 @@
         <script>
             var socket=io()
             var Nbnotif=0
-            var Ids=[]
+            var Ids=[] //liste des id des éléments à supprimer
             
+            //Décoche les checkbox des concurrents ainsi que la checkbox pour tous cocher
             Array.from(document.getElementById('concurrants').children).forEach(function(e){
                 e.children[3].children[0].checked=false
             })
             document.getElementById('checkall').checked=false
-        
+            
+            //Ecoute l'évènement lorsque le serveur renvoie toutes les concurrents
             socket.on("reloadConcurrant",function(data){
                 populate("concurrants",data)
             })
+
+            //Ecoute l'évènement lorsque le serveur envoie une 'notification'
             socket.on("newsConcurrant",function(data){
                 Jsondata=JSON.parse(data)
                 info(Jsondata.titre,Jsondata.msg)
             })
 
-
+            //Fonction appelée lorsque l'on coche ou décoche la checkbox "Tout cocher" ou une checkbox en particulier
             function check(id){
                 checks=Array.from(document.getElementById('concurrants').children)
                 if(id=="all"){
                     if(document.getElementById('checkall').checked){
-                    
+                        //Coche toutes les checkbox et ajoute l'id de toutes les checkbox dans Ids
                         checks.forEach(function(e){
                             e.children[3].children[0].checked=true
                             if(checks.indexOf(e)==0){
@@ -150,6 +154,7 @@
                         })
                     }
                     else{
+                        //Décoche toutes les checkbox et supprime l'id de toutes les checkbox dans Ids
                         Array.from(document.getElementById('concurrants').children).forEach(function(e){
                             e.children[3].children[0].checked=false
                             Ids.splice(Ids.indexOf(e.children[3].children[0].getAttribute('id')))
@@ -160,13 +165,17 @@
                 else{
                     clickCheck=document.getElementById('c_'+id).checked
                     if(clickCheck){
+                        //Coche la checkbox qui a l'id passé en paramètre et ajoute cet id dans Ids
                         Ids.push(["","partie.id",document.getElementById('c_'+id).getAttribute('id').slice(2,document.getElementById('c_'+id).getAttribute('id').lenght)])
                     }
                     else{
+                        //Décoche la checkbox qui a l'id passé en paramètre et supprime cet id dans Ids
                         Ids.splice(Ids.indexOf(document.getElementById('c_'+id).getAttribute('id')))
                     }
                 }
             }
+
+            //Modifie le modal #modal_modal en fonction de l'ajout ou modification
             function modifier(id,nom,prenom){
                 
                 if(id!=null){
@@ -191,7 +200,7 @@
             }
 
             
-
+            //Modifie le modal #modal_supprimer en fonction de la suppression de un ou plusieurs concurrents
             function supprimer(id){
                 if(id=="all"){
                     document.getElementById('submitAutre').setAttribute('onclick',"supprAllConcurrant()")
@@ -209,7 +218,7 @@
                 
             }
 
-            
+             //Emet l'évènement d'ajout de concurrent
             function addConcurrant(){
                 console.log(typeof document.getElementById('nom').value)
                 data=encode([["nom",document.getElementById('nom').value],["prenom",document.getElementById('prenom').value]])
@@ -219,15 +228,18 @@
 
             }
 
+            //Emet l'évènement de la modification d'un concurrent
             function modifConcurrant(id){
                         
                 socket.emit('modifConcurrantClient',encode([["nom",document.getElementById('nom').value],["prenom",document.getElementById('prenom').value],['id',id]]))
             }
 
+            //Emet l'évènement de la suppression d'un concurrent
             function supprConcurrant(id){
                 socket.emit('suppConcurrantClient',encode([['id',id]]))
             }
 
+            //Emet l'évènement de la suppression de plusieurs concurrents
             function supprConcurrant(id){
                 socket.emit('suppAllConcurrantClient',Ids)
             }
@@ -237,17 +249,20 @@
                 document.getElementById('checkall').checked=false
             }
 
+
+            //Ouvre le panneau des notifications
             function openNav() {
                 document.getElementById("mySidebar").style.left = "0px";
                 document.getElementById('side').setAttribute('onclick','closeNav()')
             }
 
+            //Ferme le panneau des notifications
             function closeNav() {
                 document.getElementById("mySidebar").style.left= "-300px";
                 document.getElementById('side').setAttribute('onclick','openNav()')
             }
 
-            
+            //Supprime puis ajoute les nouvelles parties et les concurrents modifiées
             function populate(tableau,json){
                 body=document.getElementById(tableau)
                 deleteRow(body)
@@ -284,6 +299,7 @@
                 })
             }
             
+            //Emet la requête du rechargement des concurrents ("Rafraîchir") et supprime la bulle des notifications
             function ReqReload(){
                 socket.emit("reqReloadConcurrant")
                 console.log(document.getElementById('notif').children)

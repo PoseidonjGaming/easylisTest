@@ -37,13 +37,17 @@ app.get('/socket.io/socket.io.js',(req,res)=>{
 
 
 
+/*
+    Concurrant et Partie conrtiennent les fonctions permettant de générer le text de la requète
+    (exemple: Concurrant.getConcurrant()->"SELECT * FROM concurrant")
 
+*/ 
 
-
+//Route permettant d'accèder à la page d'accueil du site
 app.get("/",(req,res)=>{
     res.redirect("/parties")
 })
-
+//Route permettant d'accèder à la  la page d'administration des concurrents
 app.get('/concurrants',(req,res)=>{
    
     pool.query(Concurrant.getConcurrant(),(err,result)=>{
@@ -57,6 +61,7 @@ app.get('/concurrants',(req,res)=>{
     
 });
 
+//Route permettant d'accèder à la  la page d'administration des parties
 app.get("/parties",(req,res)=>{
     
     pool.query(Partie.getPartie(),(err,result)=>{
@@ -97,25 +102,31 @@ app.get('/test',(req,res)=>{
     res.render('test.ejs')
 })
 
+//Le serveur détecte la connection d'un client
 io.on('connection',(socket)=>{
     
+    //Le serveur renvoie les parties lorsqu'un client en fait la demande (bouton "Rafraîchir")
     socket.on("reqReloadPartie",function(){
         pool.query(Partie.getPartie(),(err,result)=>{
             socket.emit("reloadPartie",result.rows)
         })
     })
     
+    //Le serveur renvoie les parties lorsqu'un client en fait la demande (bouton "Rafraîchir")
     socket.on("reqReloadConcurrant",function(){
         pool.query(Concurrant.getConcurrant(),(err,result)=>{
             socket.emit("reloadConcurrant",result.rows)
         })
     })
+
+    //socketPartie contient les évenement ajout, modification, suppression et termine uine partie
     socketPartie.addPartieClient(socket)
     socketPartie.modifPartieClient(socket)
     socketPartie.suppPartieClient(socket)
     socketPartie.suppAllPartieClient(socket)
     socketPartie.terminerPartieClient(socket)
 
+    //socketConcurrant contient les évenement ajout, modification, suppression un concurrant
     socketConcurrant.addConcurrantClient(socket)
     socketConcurrant.modifConcurrantClient(socket)
     socketConcurrant.suppConcurrantClient(socket)

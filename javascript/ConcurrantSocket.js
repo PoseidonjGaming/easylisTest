@@ -8,6 +8,8 @@ var pool=new Pool({
     password:'P@ssw0rd',
     port:5432
 });
+
+//Le serveur écoute si un client ajoute un concurrent
 function addConcurrantClient(socket){
     socket.on('addConcurrantClient',(data)=>{
         JsonData=JSON.parse(data)
@@ -44,6 +46,7 @@ function addConcurrantClient(socket){
     })
 }
 
+//Le serveur écoute si un client modifie un concurrent
 function modifConcurrantClient(socket){
     socket.on('modifConcurrantClient',(data)=>{
         JsonData=JSON.parse(data)
@@ -80,6 +83,7 @@ function modifConcurrantClient(socket){
     })
 }
 
+//Le serveur écoute si un client supprime un concurrent
 function suppConcurrantClient(socket){
     socket.on('suppConcurrantClient',(data)=>{
         JsonData=JSON.parse(data)
@@ -113,6 +117,7 @@ function suppConcurrantClient(socket){
     })
 }
 
+//Le serveur écoute si un client supprime plusieurs concurrents
 function suppAllConcurrantClient(socket){
     socket.on('suppAllConcurrantClient',(data)=>{
         
