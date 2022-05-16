@@ -21,7 +21,7 @@ socket.io: Ce module permet au serveur d'envoyer de lui-même des données au cl
 
 ## Paramètrage
 
-Pour paramètrer la connection au serveur de base données, il faut modifier dans les fichiers concurrantSocket.js et partieSocket.js, la const pool.
+Pour paramètrer la connection au serveur de base données, il faut modifier dans les fichiers concurrantSocket.js et partieSocket.js, la variable pool.
 
 ```javascript
 var pool=new Pool({
