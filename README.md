@@ -7,13 +7,13 @@ npm i express pg ejs body-parser nodemon socket.io
 ```
 Cette commande va installer les modules express, postgre, nodemon, body-parser et socket.io ainsi que créer le dossier node_modules.
 
-Détail des module:
+Détail des modules:
 
 Ejs: Ce module est un moteur de tamplate, il peut modifier une vue avec les valeur passées en paramètre depuis express (exemple: remplir les lignes d'un tableau avec des données).
 
-Body-parser: Ce module permet de récupérer et de transformer une chaîne de caractère, transmise par le client (navigatteur), en format JSON et vice-versa, dans le cas où la chaîne est dans le format pour le JSON.
+Body-parser: Ce module permet de récupérer et de transformer une chaîne de caractère, transmise par le client (navigatteur), en format JSON et vice-versa, dans le cas où la chaîne est dans le bon format pour le JSON. Il permet aussi de récupérer les valeurs des inputs du clients.
 
-pg: Ce module permet de se connecter et de communiquer avec une base de données PostgreSQL. Il permet entre autre d'envoyer des requète SQL et de récupérer les rusaltat au format JSON.
+pg: Ce module permet de se connecter et de communiquer avec une base de données PostgreSQL. Il permet entre autre d'envoyer des requète SQL et de récupérer les résultats au format JSON.
 
 nodemon: Ce module permet de redémarrer le serveur Node.js à chaque modification d'un fichier Javascript (il détecte lorsque l'on sauvegarde ledit fichier)
 
@@ -41,24 +41,26 @@ host: L'adresse IP du serveur de base de données.
 
 database: Le nom de la base de données.
 
-port: Le port d'écoute du serveur de base données. (5432 est le port par défaut)
+port: Le port d'écoute du serveur de base données. (Le port par défaut est 5432)
 
 # Utilisation
 
-Les procédures suivantes sont similaire pour les parties et les concurrents.
+
 
 ## Utilisation générale
 
-Lorsqu'un utilisateur modifie la base de donnée,ajoute modifie ou supprime une entrée, une notification est envoyée à tous les utilisateurs sauf celui qui a modifié la base (boule rouge dans la bouton "Ouvrir les notification").
+L'utilisation générale est similaire pour les parties et les concurrents.
+
+Lorsqu'un utilisateur modifie la base de donnée (ajoute, modifie ou supprime une entrée), une notification est envoyée à tous les utilisateurs sauf celui qui a modifié la base (boule rouge dans la bouton "Ouvrir les notifications").
 
 Pour celui qui a fait l'action, celle-ci est répercutée dans le tableau (Ajoute une ligne, modifie les colonne ou supprime une ligne) est ajoutera et/ou augmentera la bulle des notification dans le bouton "Ouvrir les notification" des autres utilisateurs.
 
-Pour les autres utilisateurs, ils doivront ouvrir le panneau des notification (Panneau à gauche de l'image) grâce au bouton "Ovrir les notification". A l'interieur de celui-ci, une notification apparaîtra à chaque action des utilisateurs. Pour supprimer ces notifications, les utilisateurs qui n'ont pas fait d'action devront cliquer sur le bouton "Rafraîchir", une fois le panneau des notification ouvert. Cette action fera les modifications nécessaires, ajouter, modifier ou supprimer des ligne du tableau ainsi que supprimer la bulle des notification dans le bouton "Ouvrir les notification".
+Pour les autres utilisateurs, ils doivront ouvrir le panneau des notification (Panneau à gauche de l'image) grâce au bouton "Ovrir les notifications". A l'interieur de celui-ci, une notification apparaîtra à chaque action des autres utilisateurs. Pour supprimer ces notifications, les utilisateurs qui n'ont pas fait d'action devront cliquer sur le bouton "Rafraîchir", une fois le panneau des notifications ouvert. Cette action fera les modifications nécessaires, ajouter, modifier ou supprimer unhe ou plusieurs ligne(s) du tableau ainsi que supprimer la bulle des notification dans le bouton "Ouvrir les notification".
 
-Pour fermer le panneau, les utilisateurs pourront cliquer sur croix à droite dans le panneau.
+Pour fermer le panneau, les utilisateurs pourront cliquer sur la croix à droite dans le panneau ou cliquer sur le bouton "Ouvrir les notifications".
 
 *Ecran des autres utilisateurs*
-![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/b1734d800b1f8021166b74b873605199bc953559/documentation/tableau.png?raw=true)
+![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/1c20a2966e1b5beb9d365b6b2e6cf45f6c1f9a4c/documentation/tableau.png?raw=true)
 
 ## Partie
 
@@ -80,10 +82,7 @@ Pour modifier une partie, les utilisateurs devront cliquer sur le bouton "Modifi
 
 ### Suppression
 
-
-
 Pour supprimer une partie, les utilisateurs devront cliquer sur le bouton "Supprimer" sur la la ligne correspondant à la partie qu'ils veulent supprimer. Une pop-up s'affichera alors puis cliquer sur le bouton "Oui" pour supprimer la partie.
-
 
 
 *pop-up de suppression*
@@ -91,7 +90,7 @@ Pour supprimer une partie, les utilisateurs devront cliquer sur le bouton "Suppr
 
 #### Suppression de plusieurs parties
 
-Pour supprimer plusieurs parties , les utilissateurs devront cliquer sur les cases correspondant aux aux parties qu'ils veulent supprimer. Puis ils devront cliquer sur le bonton "Supprimer plusieurs...", dans le tableau. Enfin pour supprimer de façon effective les parties, les utilisateurs devront cliquer sur le bouton "Oui"
+Pour supprimer plusieurs parties , les utilissateurs devront cliquer sur les cases correspondant aux parties qu'ils veulent supprimer. Puis ils devront cliquer sur le bonton "Supprimer plusieurs parties", dans le tableau. Enfin pour supprimer de façon effective les parties, les utilisateurs devront cliquer sur le bouton "Oui"
 
 *pop-up de suppression de plusieurs parties*
 ![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/1fad923b3b21dbb551cdd9b046b6559123541317/documentation/modal%20supp%20all%20partie.png?raw=true)
@@ -100,7 +99,7 @@ Pour supprimer plusieurs parties , les utilissateurs devront cliquer sur les cas
 
 ### Ajout
 
-Pour ajouter un concurrent, les utilisateurs devront cliquer sur le bouton "Ajouter". Une pop-up (fenêtre qui s'ouvre automatiquement suite à une action) s'affichera alors et les utiliseurs devront remplir les champs nom et prénom puis ils devront cliquer sur le bouton "Valider" pour ajouter un concurrent
+Pour ajouter un concurrent, les utilisateurs devront cliquer sur le bouton "Ajouter". Une pop-up s'affichera alors et les utiliseurs devront remplir les champs nom et prénom puis ils devront cliquer sur le bouton "Valider" pour ajouter un concurrent
 
 *pop-up d'ajout*
 ![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/2df4aae66014a5a08cd7b1629b913178c633e861/documentation/modal%20concurrant.png?raw=true)
@@ -116,7 +115,7 @@ Pour modifier un concurrent, les utilisateurs devront cliquer sur le bouton "Mod
 
 ### Suppression
 
-Pour supprimer un concurrent, les utilisateurs devront cliquer sur le bouton "Supprimer" sur la la ligne correspondant au concurrent qu'ils veulent supprimer. Une pop-up s'affichera alors puis cliquer sur le bouton "Oui" pour supprimer la partie.
+Pour supprimer un concurrent, les utilisateurs devront cliquer sur le bouton "Supprimer" sur la la ligne correspondant au concurrent qu'ils veulent supprimer. Une pop-up s'affichera alors puis cliquer sur le bouton "Oui" pour supprimer le concurrent.
 
 
 *pop-up de suppression*
@@ -125,7 +124,7 @@ Pour supprimer un concurrent, les utilisateurs devront cliquer sur le bouton "Su
 
 #### Suppression de plusieurs parties
 
-Pour supprimer plusieurs concurrents, les utilissateurs devront cliquer sur les cases correspondant aux aux concurrents qu'ils veulent supprimer. Puis ils devront cliquer sur le bonton "Supprimer plusieurs...", dans le tableau. Enfin pour supprimer de façon effective les concurrents, les utilisateurs devront cliquer sur le bouton "Oui"
+Pour supprimer plusieurs concurrents, les utilissateurs devront cliquer sur les cases correspondant aux concurrents qu'ils veulent supprimer. Puis ils devront cliquer sur le bonton "Supprimer plusieurs concurrents", dans le tableau. Enfin pour supprimer de façon effective les concurrents, les utilisateurs devront cliquer sur le bouton "Oui"
 
 *pop-up de suppression de plusieurs concurrents*
 ![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/46cfecef765fea0a105dc7b96c9c22e6f77710e5/documentation/modal%20concurrants%20sup.png?raw=true)
