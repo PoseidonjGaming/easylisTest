@@ -45,9 +45,9 @@ port: Le port d'écoute du serveur de base données. (5432 est le port par défa
 
 # Utilisation
 
-## Utilisation générale
+Les procédures suivantes sont similaire pour les parties et les concurrents.
 
-La procédure d'utilisation générale est similaire pour les parties et les concurrents.
+## Utilisation générale
 
 Lorsqu'un utilisateur modifie la base de donnée,ajoute modifie ou supprime une entrée, une notification est envoyée à tous les utilisateurs sauf celui qui a modifié la base (boule rouge dans la bouton "Ouvrir les notification").
 
@@ -60,7 +60,6 @@ Pour fermer le panneau, les utilisateurs pourront cliquer sur croix à droite da
 *Ecran des autres utilisateurs*
 ![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/367de0a017162d5b0dd707a8fdd18234d29f53a1/documentation/tableau.png)
 
-
 ## Partie
 
 ### Ajout
@@ -68,7 +67,7 @@ Pour fermer le panneau, les utilisateurs pourront cliquer sur croix à droite da
 Pour ajouter une partie, les utilisateurs devront cliquer sur le bouton "Ajouter". Une pop-up (fenêtre qui s'ouvre automatiquement suite à une action) s'affichera alors et les utiliseurs devront sélectionner les 2 adversaires dans la liste correspondante puis ils devront cliquer sur le bouton "Valider" pour ajouter une partie
 
 *pop-up d'ajout*
-![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/8602e2ca214daa38f5895bf5f0808d0ab4d96a6e/documentation/modal%20partie.png?raw=true)
+![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/2df4aae66014a5a08cd7b1629b913178c633e861/documentation/modal%20partie.png?raw=true)
 
 
 ### Modification
@@ -77,15 +76,25 @@ Pour modifier une partie, les utilisateurs devront cliquer sur le bouton "Modifi
 
 
 *pop-up de modification*
-![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/e457f8262b09c972de3d25543a7941a77d86debd/documentation/modal%20partie%20modif.png?raw=true)
+![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/2df4aae66014a5a08cd7b1629b913178c633e861/documentation/modal%20partie%20modif.png?raw=true)
 
 ### Suppression
+
+
 
 Pour supprimer une partie, les utilisateurs devront cliquer sur le bouton "Supprimer" sur la la ligne correspondant à la partie qu'ils veulent supprimer. Une pop-up s'affichera alors puis cliquer sur le bouton "Oui" pour supprimer la partie.
 
 
+
 *pop-up de suppression*
 ![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/b0e35e5ecdd1ad0cbc6459807e7e159c43952fed/documentation/modal%20partie%20sup.png?raw=true)
+
+#### Suppression de plusieurs parties
+
+Pour supprimer plusieurs parties , les utilissateurs devront cliquer sur les cases correspondant aux aux parties qu'ils veulent supprimer. Puis ils devront cliquer sur le bonton "Supprimer plusieurs...", dans le tableau. Enfin pour supprimer de façon effective les parties, les utilisateurs devront cliquer sur le bouton "Oui"
+
+*pop-up de suppression de plusieurs parties*
+![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/1fad923b3b21dbb551cdd9b046b6559123541317/documentation/modal%20supp%20all%20partie.png?raw=true)
 
 ## Concurrent
 
@@ -94,7 +103,7 @@ Pour supprimer une partie, les utilisateurs devront cliquer sur le bouton "Suppr
 Pour ajouter un concurrent, les utilisateurs devront cliquer sur le bouton "Ajouter". Une pop-up (fenêtre qui s'ouvre automatiquement suite à une action) s'affichera alors et les utiliseurs devront remplir les champs nom et prénom puis ils devront cliquer sur le bouton "Valider" pour ajouter un concurrent
 
 *pop-up d'ajout*
-![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/f56def5aae9cec468aa1d2b5c0569563cf22a342/documentation/modal%20concurrant.png?raw=true)
+![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/2df4aae66014a5a08cd7b1629b913178c633e861/documentation/modal%20concurrant.png?raw=true)
 
 
 ### Modification
@@ -103,7 +112,7 @@ Pour modifier un concurrent, les utilisateurs devront cliquer sur le bouton "Mod
 
 
 *pop-up de modification*
-![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/11e628e43ed4fa89da0c3af3fa1a4c472e62d6b1/documentation/modal%20concurrant%20modif.png?raw=true)
+![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/2df4aae66014a5a08cd7b1629b913178c633e861/documentation/modal%20concurrant%20modif.png?raw=true)
 
 ### Suppression
 
@@ -113,3 +122,10 @@ Pour supprimer un concurrent, les utilisateurs devront cliquer sur le bouton "Su
 *pop-up de suppression*
 ![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/b0e35e5ecdd1ad0cbc6459807e7e159c43952fed/documentation/modal%20partie%20sup.png?raw=true)
 
+
+#### Suppression de plusieurs parties
+
+Pour supprimer plusieurs concurrents, les utilissateurs devront cliquer sur les cases correspondant aux aux concurrents qu'ils veulent supprimer. Puis ils devront cliquer sur le bonton "Supprimer plusieurs...", dans le tableau. Enfin pour supprimer de façon effective les concurrents, les utilisateurs devront cliquer sur le bouton "Oui"
+
+*pop-up de suppression de plusieurs concurrents*
+![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/46cfecef765fea0a105dc7b96c9c22e6f77710e5/documentation/modal%20concurrants%20sup.png?raw=true)
