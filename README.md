@@ -58,7 +58,7 @@ Pour les autres utilisateurs, ils doivront ouvrir le panneau des notification (P
 Pour fermer le panneau, les utilisateurs pourront cliquer sur croix à droite dans le panneau.
 
 *Ecran des autres utilisateurs*
-![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/367de0a017162d5b0dd707a8fdd18234d29f53a1/documentation/tableau.png)
+![alt text](https://github.com/PoseidonjGaming/easylisTest/blob/b1734d800b1f8021166b74b873605199bc953559/documentation/tableau.png?raw=true)
 
 ## Partie
 
